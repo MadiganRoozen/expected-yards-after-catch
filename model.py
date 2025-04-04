@@ -35,31 +35,48 @@ y_train = y_train.values.reshape(-1, 1)
 y_valid = y_valid.values.reshape(-1, 1)
 y_test = y_test.values.reshape(-1, 1)
 
-#plt.hist(y_train, bins=23)
-#plt.xlabel('Yards Gained')
-#plt.ylabel('Frequency')
-#plt.title('Distribution of Yards Gained')
-#for i in range(len(plt.hist(y_train, bins=23)[0])):
-#    count = plt.hist(y_train, bins=23)[0][i]
-#    bin_left = plt.hist(y_train, bins=23)[1][i]
-#    bin_right = plt.hist(y_train, bins=23)[1][i + 1]
-#    plt.text((bin_left + bin_right) / 2, count, str(int(count)), ha='center', va='bottom')
-#plt.show()
+plt.hist(y_train, bins=23)
+plt.xlabel('Yards Gained')
+plt.ylabel('Frequency')
+plt.title('Distribution of Yards Gained')
+for i in range(len(plt.hist(y_train, bins=23)[0])):
+    count = plt.hist(y_train, bins=23)[0][i]
+    bin_left = plt.hist(y_train, bins=23)[1][i]
+    bin_right = plt.hist(y_train, bins=23)[1][i + 1]
+    plt.text((bin_left + bin_right) / 2, count, str(int(count)), ha='center', va='bottom')
+plt.show()
 
 print(x_train_scaled.shape)
 
+#model = tf.keras.Sequential([
+#    tf.keras.layers.Dense(75, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
+#    tf.keras.layers.BatchNormalization(),
+#    tf.keras.layers.Dropout(0.3),
+#    tf.keras.layers.Dense(50, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
+#    tf.keras.layers.BatchNormalization(),
+#    tf.keras.layers.Dropout(0.3),
+#    tf.keras.layers.Dense(25, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
+#    tf.keras.layers.Dense(1, activation='linear')
+#])
+
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(75, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
+    tf.keras.layers.LSTM(75, activation='tanh', kernel_regularizer=regularizers.l2(0.00015), input_shape=(1,12)),
     tf.keras.layers.BatchNormalization(),
     tf.keras.layers.Dropout(0.3),
-    tf.keras.layers.Dense(50, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
+    tf.keras.layers.LSTM(50, activation='tanh', kernel_regularizer=regularizers.l2(0.00015)),
     tf.keras.layers.BatchNormalization(),
     tf.keras.layers.Dropout(0.3),
-    tf.keras.layers.Dense(25, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
-    tf.keras.layers.Dense(1, activation='linear')
+    tf.keras.layers.LSTM(25, activation='tanh', kernel_regularizer=regularizers.l2(0.00015)),
+    tf.keras.layers.LSTM(1, activation='linear')
 ])
 
-model.compile(loss=tf.keras.losses.MeanSquaredError, optimizer = tf.keras.optimizers.SGD(learning_rate=0.0009, momentum=0.2), metrics=['mse'])
+x_train_scaled = x_train_scaled.reshape((x_train_scaled.shape[0], 1, x_train_scaled.shape[1]))  # (samples, time_steps=1, features)
+x_valid_scaled = x_valid_scaled.reshape((x_valid_scaled.shape[0], 1, x_valid_scaled.shape[1]))  # Same for validation
+x_test_scaled = x_test_scaled.reshape((x_test_scaled.shape[0], 1, x_test_scaled.shape[1]))
+
+print(x_train_scaled.shape)
+
+model.compile(loss=tf.keras.losses.MeanSquaredError, optimizer = tf.keras.optimizers.Adam(learning_rate=0.0009), metrics=['mse'])
 history = model.fit(
     x_train_scaled, 
     y_train, 
