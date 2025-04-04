@@ -10,7 +10,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 
-input_df = pd.read_csv("model_input_df.csv", usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", "receivero", "receiverdir", "distance_to_nearest_def", 
+input_df = pd.read_csv("model_input_df_2.csv", usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", "receivero", "receiverdir", "distance_to_nearest_def", "defenderx",
+     "defendery", "defenders", "defendera", "defenderdis", "defendero", "defenderdir",
     "defenders_in_path","pass_length", "yards_to_go", "yardline_num", "yards_gained"])
 
 input_df = input_df[input_df["yards_gained"]<=22]
@@ -60,7 +61,7 @@ print(x_train_scaled.shape)
 #])
 
 model = tf.keras.Sequential([
-    tf.keras.layers.LSTM(75, activation='tanh', kernel_regularizer=regularizers.l2(0.00015), input_shape=(1,12)),
+    tf.keras.layers.LSTM(75, activation='tanh', kernel_regularizer=regularizers.l2(0.00015), input_shape=(1,20)),
     tf.keras.layers.BatchNormalization(),
     tf.keras.layers.Dropout(0.3),
     tf.keras.layers.LSTM(50, activation='tanh', kernel_regularizer=regularizers.l2(0.00015)),
