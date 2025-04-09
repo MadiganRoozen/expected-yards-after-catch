@@ -13,7 +13,7 @@ from imblearn.over_sampling import SMOTE
 input_df = pd.read_csv("model_input_df_2.csv", usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", "receivero", "receiverdir", "distance_to_nearest_def", 
     "defenders_in_path","pass_length", "yards_to_go", "yardline_num", "yards_gained"])
 
-input_df = input_df[input_df["yards_gained"]<=22]
+input_df = input_df[input_df["yards_gained"]<=15]
 input_df = input_df[input_df["yards_gained"]>=0]
 x = input_df.drop(columns=["yards_gained"])
 y = input_df["yards_gained"]
@@ -23,8 +23,13 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_
 #further split into validation sets 
 x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=0.1, random_state=7)
 
-smote = SMOTE(sampling_strategy='auto', random_state=7)
-x_train, y_train = smote.fit_resample(x_train, y_train)
+#smote = SMOTE(sampling_strategy='auto', random_state=7)
+#x_train, y_train = smote.fit_resample(x_train, y_train)
+
+y_scaler = StandardScaler()
+y_train_scaled = y_scaler.fit_transform(y_train.values.reshape(-1, 1))
+y_valid_scaled = y_scaler.transform(y_valid.values.reshape(-1, 1))
+y_test_scaled = y_scaler.transform(y_test.values.reshape(-1, 1))
 
 scaler = StandardScaler()
 x_train_scaled = scaler.fit_transform(x_train)
@@ -109,6 +114,7 @@ from tensorflow.keras.layers import Dense
 
 
 from sklearn.model_selection import KFold
+from sklearn.metrics import mean_squared_error
 from tensorflow.keras.callbacks import EarlyStopping
 
 # Define the number of folds
@@ -125,15 +131,11 @@ param_combinations = [
 counter = 0
 for params in param_combinations:
     fold_scores = []
-    
-
-    
 
     for train_idx, val_idx in kf.split(x_train_scaled):
         # Split data
         X_train_fold, X_val_fold = x_train_scaled[train_idx], x_train_scaled[val_idx]
-        y_train_fold, y_val_fold = y_train[train_idx], y_train[val_idx]
-        
+        y_train_fold, y_val_fold = y_train_scaled[train_idx], y_train_scaled[val_idx]
     
         
         # Build model
@@ -173,7 +175,6 @@ best_result = min(results, key=lambda x: x['mean_val_loss'])
 print(f"Best parameters: {best_result['params']}")
 print(f"Best validation loss: {best_result['mean_val_loss']:.4f} ± {best_result['std_val_loss']:.4f}")
 
-
 train_loss = history.history['loss']
 val_loss = history.history['val_loss']
 
@@ -187,9 +188,15 @@ plt.show()
 
 
 y_pred = model.predict(x_test_scaled)
-loss, mse = model.evaluate(x_test_scaled, y_test)
+loss, mse = model.evaluate(x_test_scaled, y_test_scaled)
 print(f"Test Loss: {loss}")
 print(f"Test MSE: {mse}")
+y_pred = y_scaler.inverse_transform(y_pred)
+y_test = y_scaler.inverse_transform(y_test_scaled)
+mse_unscaled = mean_squared_error(y_test, y_pred)
+print(f"Unscaled MSE (yards): {mse_unscaled:.2f}")
+
+
 
 y_pred = np.round(y_pred)
 
@@ -213,3 +220,16 @@ plt.ylabel('Predicted Values')
 plt.title('Actual vs. Predicted Values')
 plt.show()
 
+from sklearn.metrics import r2_score, mean_absolute_error
+
+y_pred = model.predict(x_test_scaled)
+y_pred_original = y_scaler.inverse_transform(y_pred)
+y_test_original = y_scaler.inverse_transform(y_test_scaled)
+
+print(f"MAE: {mean_absolute_error(y_test_original, y_pred_original)}")
+print(f"R²: {r2_score(y_test_original, y_pred_original)}")
+
+residuals = y_test_original - y_pred_original
+plt.hist(residuals, bins=20)
+plt.title("Distribution of Residuals")
+plt.show()
