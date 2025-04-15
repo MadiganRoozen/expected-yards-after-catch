@@ -14,10 +14,28 @@ input_df = pd.read_csv("model_input_df_2.csv", usecols=["receiverx", "receivery"
      "defendery", "defenders", "defendera", "defenderdis", "defendero", "defenderdir",
     "defenders_in_path","pass_length", "yards_to_go", "yardline_num", "yards_gained"])
 
-input_df = input_df[input_df["yards_gained"]<=22]
+#input_df = input_df[input_df["yards_gained"]<=22]
 input_df = input_df[input_df["yards_gained"]>=0]
 x = input_df.drop(columns=["yards_gained"])
 y = input_df["yards_gained"]
+
+counts, bins, _ = plt.hist(y, bins=76)
+plt.xlabel('Yards Gained')
+plt.ylabel('Frequency')
+plt.title('Distribution of Yards Gained')
+
+# Set x-axis ticks every 2 units
+plt.xticks(np.arange(int(min(bins)), int(max(bins)) + 1, 2))
+
+# Annotate the bars
+for i in range(len(counts)):
+    count = counts[i]
+    bin_left = bins[i]
+    bin_right = bins[i + 1]
+    plt.text((bin_left + bin_right) / 2, count, str(int(count)), ha='center', va='bottom')
+
+plt.show()
+
 
 #80 percent for training 20 percent for testing
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=7)
@@ -36,16 +54,16 @@ y_train = y_train.values.reshape(-1, 1)
 y_valid = y_valid.values.reshape(-1, 1)
 y_test = y_test.values.reshape(-1, 1)
 
-plt.hist(y_train, bins=23)
-plt.xlabel('Yards Gained')
-plt.ylabel('Frequency')
-plt.title('Distribution of Yards Gained')
-for i in range(len(plt.hist(y_train, bins=23)[0])):
-    count = plt.hist(y_train, bins=23)[0][i]
-    bin_left = plt.hist(y_train, bins=23)[1][i]
-    bin_right = plt.hist(y_train, bins=23)[1][i + 1]
-    plt.text((bin_left + bin_right) / 2, count, str(int(count)), ha='center', va='bottom')
-plt.show()
+#plt.hist(y_train, bins=23)
+#plt.xlabel('Yards Gained')
+#plt.ylabel('Frequency')
+#plt.title('Distribution of Yards Gained')
+#for i in range(len(plt.hist(y_train, bins=23)[0])):
+#    count = plt.hist(y_train, bins=23)[0][i]
+#    bin_left = plt.hist(y_train, bins=23)[1][i]
+#    bin_right = plt.hist(y_train, bins=23)[1][i + 1]
+#    plt.text((bin_left + bin_right) / 2, count, str(int(count)), ha='center', va='bottom')
+#plt.show()
 
 print(x_train_scaled.shape)
 
