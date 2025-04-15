@@ -91,6 +91,22 @@ print(category_probs[1])
 print(category_probs[2])
 print(category_probs[3])
 print(category_probs[4])
+print(category_probs[5])
+print(category_probs[6])
+print(category_probs[7])
+print(category_probs[8])
+print(category_probs[9])
+print(" ")
+print(category_probs[10])
+print(category_probs[11])
+print(category_probs[12])
+print(category_probs[13])
+print(category_probs[14])
+print(category_probs[15])
+print(category_probs[16])
+print(category_probs[17])
+print(category_probs[18])
+print(category_probs[19])
 
 #dataFrame for actual vs predicted values
 results_df = pd.DataFrame({
@@ -98,12 +114,8 @@ results_df = pd.DataFrame({
     'Predicted Value (Class)': predicted_classes,
     'Predicted Probability (Max Class Prob)': np.max(preds_concat, axis=1) 
 })
-
-print(results_df.head())
-
-
-
-
+print(results_df.size)
+print(results_df.head(20))
 
 
 def map_outcome(label):
