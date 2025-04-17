@@ -14,10 +14,10 @@ input_df = pd.read_csv("model_input_df_2.csv", usecols=["receiverx", "receivery"
      "defendery", "defenders", "defendera", "defenderdis", "defendero", "defenderdir",
     "defenders_in_path","pass_length", "yards_to_go", "yardline_num", "yards_gained"])
 
-#input_df = input_df[input_df["yards_gained"]<=22]
-input_df = input_df[input_df["yards_gained"]>=0]
+input_df = input_df[input_df["yards_gained"]<=22]
+#input_df = input_df[input_df["yards_gained"]>=0]
 x = input_df.drop(columns=["yards_gained"])
-y = input_df["yards_gained"]
+y = input_df["yards_gained"].clip(lower=0)
 
 counts, bins, _ = plt.hist(y, bins=76)
 plt.xlabel('Yards Gained')
@@ -42,8 +42,9 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_
 #further split into validation sets 
 x_train, x_valid, y_train, y_valid = train_test_split(x_train, y_train, test_size=0.1, random_state=7)
 
-smote = SMOTE(sampling_strategy='auto', random_state=7)
+smote = SMOTE(sampling_strategy='auto', random_state=7, k_neighbors=3)
 x_train, y_train = smote.fit_resample(x_train, y_train)
+
 
 scaler = StandardScaler()
 x_train_scaled = scaler.fit_transform(x_train)
@@ -67,27 +68,28 @@ y_test = y_test.values.reshape(-1, 1)
 
 print(x_train_scaled.shape)
 
-#model = tf.keras.Sequential([
-#    tf.keras.layers.Dense(75, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
-#    tf.keras.layers.BatchNormalization(),
-#    tf.keras.layers.Dropout(0.3),
-#    tf.keras.layers.Dense(50, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
-#    tf.keras.layers.BatchNormalization(),
-#    tf.keras.layers.Dropout(0.3),
-#    tf.keras.layers.Dense(25, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
-#    tf.keras.layers.Dense(1, activation='linear')
-#])
-
 model = tf.keras.Sequential([
-    tf.keras.layers.LSTM(75, activation='tanh', kernel_regularizer=regularizers.l2(0.00015), input_shape=(1,20)),
+   tf.keras.layers.Dense(50, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
     tf.keras.layers.BatchNormalization(),
     tf.keras.layers.Dropout(0.3),
-    tf.keras.layers.LSTM(50, activation='tanh', kernel_regularizer=regularizers.l2(0.00015)),
+    tf.keras.layers.Dense(25, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
     tf.keras.layers.BatchNormalization(),
     tf.keras.layers.Dropout(0.3),
-    tf.keras.layers.LSTM(25, activation='tanh', kernel_regularizer=regularizers.l2(0.00015)),
-    tf.keras.layers.LSTM(1, activation='linear')
+    tf.keras.layers.Dense(12, activation='relu', kernel_regularizer=regularizers.l2(0.00015)),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dense(1, activation='relu')
 ])
+
+#model = tf.keras.Sequential([
+#    tf.keras.layers.LSTM(75, activation='tanh', kernel_regularizer=regularizers.l2(0.00015), input_shape=(1,20)),
+#    tf.keras.layers.BatchNormalization(),
+#    tf.keras.layers.Dropout(0.3),
+#    tf.keras.layers.LSTM(50, activation='tanh', kernel_regularizer=regularizers.l2(0.00015)),
+#   tf.keras.layers.BatchNormalization(),
+#    tf.keras.layers.Dropout(0.3),
+#    tf.keras.layers.LSTM(25, activation='tanh', kernel_regularizer=regularizers.l2(0.00015)),
+#    tf.keras.layers.LSTM(1, activation='linear')
+#])
 
 x_train_scaled = x_train_scaled.reshape((x_train_scaled.shape[0], 1, x_train_scaled.shape[1]))  # (samples, time_steps=1, features)
 x_valid_scaled = x_valid_scaled.reshape((x_valid_scaled.shape[0], 1, x_valid_scaled.shape[1]))  # Same for validation
@@ -95,7 +97,7 @@ x_test_scaled = x_test_scaled.reshape((x_test_scaled.shape[0], 1, x_test_scaled.
 
 print(x_train_scaled.shape)
 
-model.compile(loss=tf.keras.losses.MeanSquaredError, optimizer = tf.keras.optimizers.Adam(learning_rate=0.0009), metrics=['mse'])
+model.compile(loss=tf.keras.losses.MeanSquaredError, optimizer = tf.keras.optimizers.SGD(learning_rate=0.0015), metrics=['mse'])
 history = model.fit(
     x_train_scaled, 
     y_train, 
@@ -125,6 +127,23 @@ y_pred = np.round(y_pred)
 
 y_pred = np.array(y_pred).flatten() 
 y_test = np.array(y_test).flatten()
+
+counts, bins, _ = plt.hist(y_pred, bins=76)
+plt.xlabel('Yards Gained')
+plt.ylabel('Frequency')
+plt.title('Distribution of Yards Gained')
+
+# Set x-axis ticks every 2 units
+plt.xticks(np.arange(int(min(bins)), int(max(bins)) + 1, 2))
+
+# Annotate the bars
+for i in range(len(counts)):
+    count = counts[i]
+    bin_left = bins[i]
+    bin_right = bins[i + 1]
+    plt.text((bin_left + bin_right) / 2, count, str(int(count)), ha='center', va='bottom')
+
+plt.show()
 
 pairs = list(zip(y_test, y_pred))
 unique_pairs, counts = np.unique(pairs, axis=0, return_counts=True)
