@@ -8,6 +8,8 @@ import xgboost as xgb
 import seaborn as sns
 import statsmodels.api as sm 
 import matplotlib.pyplot as plt
+from imblearn.over_sampling import SMOTE
+from sklearn.utils.class_weight import compute_class_weight
 
 
 def get_category_probabilities(sample_probs, val):
@@ -28,16 +30,18 @@ def get_category_probabilities(sample_probs, val):
 
 
 #Data preparation
-input_df = pd.read_csv("model_input_df_2.csv", usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", "receivero", "receiverdir", "distance_to_nearest_def", "defenderx",
-     "defendery", "defenders", "defendera", "defenderdis", "defendero", "defenderdir",
+input_df = pd.read_csv("model_input_df.csv", usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", "receivero", "receiverdir", "distance_to_nearest_def", 
     "defenders_in_path","pass_length", "yards_to_go", "yardline_num", "yards_gained"])
 
-#input_df = input_df[input_df["yards_gained"]<=22]
+#input_df = pd.read_csv("model_input_df_2.csv", usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", "receivero", "receiverdir", "distance_to_nearest_def", "defenderx",
+#    "defendery", "defenders", "defendera", "defenderdis", "defendero", "defenderdir",
+#    "defenders_in_path","pass_length", "yards_to_go", "yardline_num", "yards_gained"])
+
+#input_df = input_df[input_df["yards_gained"]<=30]
 #input_df = input_df[input_df["yards_gained"]>=0]
 x = input_df.drop(columns=["yards_gained"])
 y = input_df["yards_gained"]
 y = input_df["yards_gained"].clip(lower=0)
-
 
 def bucketize(y):
     if y == 0:
@@ -60,11 +64,11 @@ params = {
     "objective": "multi:softprob",
     "eval_metric": "mlogloss",
     "num_class": 4,
-    "eta": 0.025,
-    "gamma": 2,
+    "eta": 0.05,
+    "gamma": 1,
     "subsample": 0.8,
     "colsample_bytree": 0.8,
-    "max_depth": 4,
+    "max_depth": 5,
     "min_child_weight": 1,
 }
 
@@ -74,10 +78,50 @@ for fold, (train_idx, test_idx) in enumerate(kfold.split(x)):
     x_train, x_test = x.iloc[train_idx], x.iloc[test_idx]
     y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
 
-    dtrain = xgb.DMatrix(x_train, label=y_train)
+    #smote = SMOTE(sampling_strategy='auto', random_state=7, k_neighbors=2)
+    #x_train, y_train = smote.fit_resample(x_train, y_train)
+
+    class_weights = compute_class_weight(
+        class_weight="balanced",
+        classes=np.unique(y_train),
+        y=y_train
+    )
+    weight_dict = dict(zip(np.unique(y_train), class_weights))
+
+    class_to_adjust = 1  # Specify the class you want to modify
+    new_weight = 0.8      # Specify the new weight you want to assign to this class
+
+    # Modify the weight for the specified class
+    weight_dict[class_to_adjust] = new_weight
+
+    #weight_dict = {
+    #0: 1.14,  
+    #1: 1.2,  
+    #2: 2.3,  
+    #3: 2.7
+    #}
+
+    print("Class weight dictionary:", weight_dict)
+
+    # Create sample weights for each row in training data
+    sample_weights = y_train.map(weight_dict)
+
+    # Build DMatrix with sample weights
+    dtrain = xgb.DMatrix(x_train, label=y_train, weight=sample_weights)
     dtest = xgb.DMatrix(x_test)
 
     model = xgb.train(params, dtrain, num_boost_round=500)
+
+    importances = model.get_score(importance_type='gain')  # or 'weight', 'cover', 'total_gain'
+
+    # Convert to DataFrame for easy viewing
+    importance_df = pd.DataFrame({
+        'Feature': list(importances.keys()),
+        'Importance': list(importances.values())
+    }).sort_values(by='Importance', ascending=False)
+
+    print(importance_df)
+
 
     preds = model.predict(dtest)
     all_preds.append(preds)
