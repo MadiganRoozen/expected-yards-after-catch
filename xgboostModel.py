@@ -1,64 +1,79 @@
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, confusion_matrix, classification_report
-from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import KFold
 import xgboost as xgb
 import seaborn as sns
-import statsmodels.api as sm 
 import matplotlib.pyplot as plt
 from imblearn.over_sampling import SMOTE
 from sklearn.utils.class_weight import compute_class_weight
 
-
 def get_category_probabilities(sample_probs, val):
-    actual_yards = val
-    # Categories: 0 yards, 1-5 yards, 6-10 yards, 11+ yards
-    loss_prob = sample_probs[0]  # Class 0: 0 yards
-    short_gain_prob = sample_probs[1:6].sum()  # Classes 1-5: 1-5 yards
-    med_gain_prob = sample_probs[6:11].sum()  # Classes 6-10: 6-10 yards
-    long_gain_prob = sample_probs[11:].sum()  # Classes 11-76: 11+ yards
-
     return {
-        "actual yards": actual_yards,
-        "0 yards": loss_prob,
-        "1-5 yards": short_gain_prob,
-        "6-10 yards": med_gain_prob,
-        "11+ yards": long_gain_prob
+        "actual yards": val,
+        "0 yards": sample_probs[0:0.99].sum(),
+        "1-5 yards": sample_probs[1:5.99].sum(),
+        "6-10 yards": sample_probs[6:10.99].sum(),
+        "11+ yards": sample_probs[11:].sum()
     }
 
+# Data preparation
+input_df = pd.read_csv(r"C:\Users\wolve\Desktop\New folder\SD\model_input_df_with_friends.csv", 
+                      usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", 
+                              "receivero", "receiverdir", "distance_to_nearest_def", "defenders_in_path",
+                              "friends_in_path", "pass_length", "yards_to_go", "yardline_num", "yards_gained"])
 
-#Data preparation
-input_df = pd.read_csv("model_input_df.csv", usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", "receivero", "receiverdir", "distance_to_nearest_def", 
-    "defenders_in_path","pass_length", "yards_to_go", "yardline_num", "yards_gained"])
+# Feature engineering
+def bucket_separation(distance):
+    if distance < 0.5: return 0
+    elif 0.5 <= distance < 2.0: return 1
+    elif 2.0 <= distance < 5.0: return 2
+    elif 5.0 <= distance < 8.0: return 3
+    else: return 4
 
-#input_df = pd.read_csv("model_input_df_2.csv", usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", "receivero", "receiverdir", "distance_to_nearest_def", "defenderx",
-#    "defendery", "defenders", "defendera", "defenderdis", "defendero", "defenderdir",
-#    "defenders_in_path","pass_length", "yards_to_go", "yardline_num", "yards_gained"])
+def bucket_friends(count):
+    if count == 0: return 0
+    elif 1 <= count <= 2: return 1
+    elif 3 <= count <= 4: return 2
+    else: return 3
 
-#input_df = input_df[input_df["yards_gained"]<=30]
-#input_df = input_df[input_df["yards_gained"]>=0]
-x = input_df.drop(columns=["yards_gained"])
-y = input_df["yards_gained"]
-y = input_df["yards_gained"].clip(lower=0)
+input_df["defender_separation_encoded"] = input_df["distance_to_nearest_def"].apply(bucket_separation)
+input_df["friends_bucket"] = input_df["friends_in_path"].apply(bucket_friends)
+input_df["blocking_advantage"] = input_df["friends_bucket"] - np.floor(input_df["defenders_in_path"] / 2)
+input_df['is_screen_pass'] = (input_df['pass_length'] < 0).astype(int)
+input_df["high_quality_screen"] = ((input_df['is_screen_pass'] == 1) & 
+                                 (input_df["friends_bucket"] >= 2) & 
+                                 (input_df["defender_separation_encoded"] >= 3)).astype(int)
+input_df["separation_x_pass_length"] = input_df["defender_separation_encoded"] * input_df["pass_length"]
+input_df['screen_yac'] = input_df['yards_gained'] - input_df['pass_length']
 
-def bucketize(y):
-    if y == 0:
-        return 0
-    elif 1 <= y <= 5:
-        return 1
-    elif 6 <= y <= 10:
-        return 2
-    else:
-        return 3
+# Prepare features and target
+x = input_df[[
+    "friends_bucket",
+    "defender_separation_encoded",
+    "blocking_advantage",
+    "high_quality_screen",
+    "separation_x_pass_length",
+    "screen_yac",
+    "receiverx",
+    "receivery",
+    "receivers",
+    "receivera",
+    "receiverdis",
+    "receivero",
+    "receiverdir",
+    "defenders_in_path",
+    "pass_length",
+    "yards_to_go",
+    "yardline_num"
+]].copy()
 
-y = input_df["yards_gained"].apply(bucketize)
+y = input_df["yards_gained"].clip(lower=0).apply(
+    lambda y: 0 if y == 0 else 1 if 1 <= y <= 5 else 2 if 6 <= y <= 10 else 3
+)
 
-kfold = KFold(n_splits=5, shuffle=True, random_state=7)
-all_preds = []
-all_true = []
-
+# Model training
 params = {
     "booster": "gbtree",
     "objective": "multi:softprob",
@@ -72,94 +87,89 @@ params = {
     "min_child_weight": 1,
 }
 
+kfold = KFold(n_splits=5, shuffle=True, random_state=7)
+all_preds = []
+all_true = []
+
 for fold, (train_idx, test_idx) in enumerate(kfold.split(x)):
     print(f"Fold {fold + 1}")
-
+    
     x_train, x_test = x.iloc[train_idx], x.iloc[test_idx]
     y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
-
-    #smote = SMOTE(sampling_strategy='auto', random_state=7, k_neighbors=2)
-    #x_train, y_train = smote.fit_resample(x_train, y_train)
-
-    class_weights = compute_class_weight(
-        class_weight="balanced",
-        classes=np.unique(y_train),
-        y=y_train
-    )
+    
+    smote = SMOTE(sampling_strategy={2: 1300, 3: 1100}, k_neighbors=4, random_state=7)
+    x_train, y_train = smote.fit_resample(x_train, y_train)
+    
+    class_weights = compute_class_weight("balanced", classes=np.unique(y_train), y=y_train)
     weight_dict = dict(zip(np.unique(y_train), class_weights))
-
-    class_to_adjust = 1  # Specify the class you want to modify
-    new_weight = 0.8      # Specify the new weight you want to assign to this class
-
-    # Modify the weight for the specified class
-    weight_dict[class_to_adjust] = new_weight
-
-    #weight_dict = {
-    #0: 1.14,  
-    #1: 1.2,  
-    #2: 2.3,  
-    #3: 2.7
-    #}
-
-    print("Class weight dictionary:", weight_dict)
-
-    # Create sample weights for each row in training data
+    weight_dict[1] = 0.8  # Adjust weight for 1-5 yards class
+    
     sample_weights = y_train.map(weight_dict)
-
-    # Build DMatrix with sample weights
     dtrain = xgb.DMatrix(x_train, label=y_train, weight=sample_weights)
     dtest = xgb.DMatrix(x_test)
-
+    
     model = xgb.train(params, dtrain, num_boost_round=500)
-
-    importances = model.get_score(importance_type='gain')  # or 'weight', 'cover', 'total_gain'
-
-    # Convert to DataFrame for easy viewing
-    importance_df = pd.DataFrame({
-        'Feature': list(importances.keys()),
-        'Importance': list(importances.values())
-    }).sort_values(by='Importance', ascending=False)
-
-    print(importance_df)
-
-
     preds = model.predict(dtest)
     all_preds.append(preds)
     all_true.append(y_test.reset_index(drop=True))
 
-#combine all predictions and labels
+# Combine results
 preds_concat = np.vstack(all_preds)
 true_labels = pd.concat(all_true, ignore_index=True)
-
 predicted_classes = np.argmax(preds_concat, axis=1)
 
-# `true_labels` and `predicted_classes` are already defined
-class_names = ["0 yards", "1-5", "6-10", "11+"]
-
-# Confusion matrix
+# Evaluation
+class_names = ["0 yards", "1-5 yards", "6-10 yards", "11+ yards"]
 cm = confusion_matrix(true_labels, predicted_classes)
+print("Confusion Matrix:\n", cm)
+print("\nClassification Report:\n", classification_report(true_labels, predicted_classes, target_names=class_names))
 
-# Print raw confusion matrix
-print("Confusion Matrix:")
-print(cm)
-
-# Classification report
-print("\nClassification Report:")
-print(classification_report(true_labels, predicted_classes, target_names=class_names))
-
-# Optional: plot confusion matrix
 plt.figure(figsize=(8, 6))
 sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=class_names, yticklabels=class_names)
-plt.xlabel("Predicted Class")
-plt.ylabel("True Class")
 plt.title("Confusion Matrix")
 plt.show()
-# Now calculate category probabilities for each sample
-#category_probs = [
-#    get_category_probabilities(sample_probs, true_labels.iloc[i]) 
-#    for i, sample_probs in enumerate(preds_concat)
-#]
 
-# Example: Print category probabilities for the first sample
-#print("Category probabilities for the first sample:")
-#print(category_probs[0])
+
+
+# Save misclassified 11+ yard plays
+analysis_df = x_test.copy()
+analysis_df['true_yards'] = y_test
+analysis_df['predicted_class'] = predicted_classes
+analysis_df['prob_11plus'] = preds_concat[:, 3]
+
+misclassified_11plus = analysis_df[(analysis_df['true_yards'] == 3) & (analysis_df['predicted_class'] != 3)]
+with open('11plus_results.txt', 'w') as f:
+    f.write(f"Misclassified 11+ Yards Plays: {len(misclassified_11plus)}/{len(y_test[y_test==3])}\n")
+    for _, row in misclassified_11plus.nlargest(10, 'prob_11plus').iterrows():
+        f.write(f"\nTrue: 11+ | Predicted: {class_names[row['predicted_class']]}\n")
+        f.write(f"Prob(11+): {row['prob_11plus']:.2f}\n")
+        f.write(f"Blockers: {row['friends_bucket']} | Defenders: {row['defenders_in_path']}\n")
+        f.write(f"Pass Length: {row['pass_length']:.1f} | Separation: {row['defender_separation_encoded']}\n")
+
+
+# First get ALL correctly predicted 11+ yard plays
+correct_11plus = analysis_df[
+    (analysis_df['true_yards'] == 3) & 
+    (analysis_df['predicted_class'] == 3)
+]
+
+# Then take a sample (15 or fewer if less available)
+sample_size = min(15, len(correct_11plus))
+sampled_plays = correct_11plus.sample(sample_size)
+
+# Write to file
+with open('correct_11plus_plays.txt', 'w') as f:
+    f.write("Correctly Predicted 11+ Yard Plays Analysis\n")
+    f.write("==========================================\n\n")
+    f.write(f"Total Correct: {len(correct_11plus)}/{len(y_test[y_test==3])} ({len(correct_11plus)/len(y_test[y_test==3]):.1%})\n\n")
+    
+    for idx, row in sampled_plays.iterrows():
+        f.write(f"Play #{idx}\n")
+        f.write("------------\n")
+        f.write(f"Prob(11+): {row['prob_11plus']:.2f}\n")
+        f.write(f"Blockers: {row['friends_bucket']} | Defenders: {row['defenders_in_path']}\n")
+        f.write(f"Pass Length: {row['pass_length']:.1f} yds\n")
+        f.write(f"Defender Separation: {row['defender_separation_encoded']}\n")
+        f.write(f"Blocking Advantage: {row['blocking_advantage']:.1f}\n")
+        f.write(f"High Quality Screen: {'Yes' if row['high_quality_screen'] else 'No'}\n")
+        f.write(f"YAC Estimate: {row['screen_yac']:.1f} yds\n\n")
