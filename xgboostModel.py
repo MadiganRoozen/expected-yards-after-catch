@@ -20,63 +20,14 @@ def get_category_probabilities(sample_probs, val):
     }
 
 # Data preparation
-input_df = pd.read_csv(r"model_input_df_june_9.csv", 
+input_df = pd.read_csv(r"SD/model_input_df_pass_catch_with_friends.csv", 
                       usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", 
-                              "receivero", "receiverdir", "offense_formation", "distance_to_nearest_def", "defenderx",
-                              "defendery", "defenders", "defenderdir", "nearest_def_coverage", "defenders_in_path",
+                              "receivero", "receiverdir", "distance_to_nearest_def", "defenders_in_path",
                               "friends_in_path", "pass_length", "yards_to_go", "yardline_num", "yards_gained"])
 
 input_df = input_df[input_df["pass_length"] > 0]
 
-
-#print("Offense formations:\n", input_df["offense_formation"].unique())
-#print("Nearest defender coverages:\n", input_df["nearest_def_coverage"].unique())
-#print("Offense Formation Distribution:\n", input_df["offense_formation"].value_counts())
-#print("\nNearest Defender Coverage Distribution:\n", input_df["nearest_def_coverage"].value_counts())
-
-#shotgun_plays = input_df[input_df["offense_formation"] == "EMPTY"]
-
-# View distribution (value counts)
-#print("Yards Gained Distribution for SHOTGUN:")
-#print(shotgun_plays["yards_gained"].value_counts().sort_index())
-
 # Feature engineering
-
-def calc_DTC(receiverdir, receivers, receiverx, receivery, receivera, defenderdir, defenders, defenderx, defendery):
-    # Convert angles from degrees to radians
-    receiver_theta = np.radians(receiverdir)
-    defender_theta = np.radians(defenderdir)
-
-    # Compute velocity vectors
-    v_receiver_x = receivers  * np.cos(receiver_theta)
-    v_receiver_y = receivers * np.sin(receiver_theta)
-    v_defender_x = defenders * np.cos(defender_theta)
-    v_defender_y = defenders * np.sin(defender_theta)
-
-    # Relative velocity vector
-    v_rel_x = v_defender_x - v_receiver_x
-    v_rel_y = v_defender_y - v_receiver_y
-
-    # Compute direction vector between receiver and defender
-    delta_x = receiverx - defenderx
-    delta_y = receivery - defendery
-    distance = np.sqrt(delta_x**2 + delta_y**2)
-
-    # Unit vector from receiver to defender
-    unit_vec_x = delta_x / distance
-    unit_vec_y = delta_y / distance
-
-    # Closing speed = projection of relative velocity onto separation vector
-    closing_speed = v_rel_x * unit_vec_x + v_rel_y * unit_vec_y
-
-    # Avoid division by zero or negative closing
-    epsilon = 1e-6
-    ttc = distance / (closing_speed + epsilon)
-
-    # Distance receiver travels before being closed in
-    distance_before_close = (receivers * ttc + 0.5 * receivera * (ttc ** 2))
-    return distance_before_close
-
 def bucket_separation(distance):
     if distance < 0.5: return 0
     elif 0.5 <= distance < 2.0: return 1
@@ -90,44 +41,10 @@ def bucket_friends(count):
     elif 3 <= count <= 4: return 2
     else: return 3
 
-def bucket_offense_form(form):
-    if form == "SHOTGUN": return 0
-    elif form == "EMPTY": return 1
-    elif form == "I_FORM": return 2
-    elif form == "SINGLEBACK": return 3
-    elif form == "PISTOL": return 4
-    elif form == "JUMBO": return 5
-    else: return 6
-
-def bucket_def_coverage(cover):
-    if cover == "FL": return 0
-    elif cover == "HCL": return 1
-    elif cover == "MAN": return 2
-    elif cover == "CFL": return 3
-    elif cover == "2L": return 4
-    elif cover == "3R": return 5
-    elif cover == "3L": return 6
-    elif cover == "CFR": return 7
-    elif cover == "HCR": return 8
-    elif cover == "HOL": return 9
-    elif cover == "4OL": return 10
-    elif cover == "FR": return 11
-    elif cover == "4IR": return 12
-    elif cover == "4IL": return 13
-    elif cover == "4OR": return 14
-    elif cover == "3M": return 15
-    elif cover == "2R": return 16
-    elif cover == "PRE": return 17
-    elif cover == "DF": return 18
-    else: return 19
-
-
 input_df["defender_separation_encoded"] = input_df["distance_to_nearest_def"].apply(bucket_separation)
 input_df["friends_bucket"] = input_df["friends_in_path"].apply(bucket_friends)
 input_df["blocking_advantage"] = input_df["friends_bucket"] - np.floor(input_df["defenders_in_path"] / 2)
 input_df["separation_x_pass_length"] = input_df["defender_separation_encoded"] * input_df["pass_length"]
-input_df["offense_form_bucket"] = input_df["offense_formation"].apply(bucket_offense_form)
-input_df["nearest_def_cover_bucket"] = input_df["nearest_def_coverage"].apply(bucket_def_coverage)
 
 # 1. Receiver's positioning advantage (sideline vs. middle)
 input_df["receiver_near_sideline"] = (np.abs(input_df["receiverx"]) > 30).astype(int)
@@ -141,23 +58,22 @@ input_df["receiver_momentum"] = input_df["receivers"] * np.cos(np.radians(input_
 # 4. Field position impact (compressed yardline)
 input_df["yardline_squeezed"] = np.log1p(input_df["yardline_num"])
 
-DTC = []
+input_df["defender_pressure"] = (
+    input_df["defenders_in_path"] * 
+    np.where(input_df["receivera"] < 0, 1.5, 1.0) *  # Amplify if decelerating
+    (1 / (input_df["distance_to_nearest_def"] + 0.5)  # Inverse distance weighting
+))
 
-for _, row in input_df.iterrows():
-    result = calc_DTC(
-        row["receiverdir"], row["receivers"], row["receiverx"], row["receivery"], row["receivera"],
-        row["defenderdir"], row["defenders"], row["defenderx"], row["defendery"]
-    )
-    DTC.append(result)
+# Create tackle probability feature
+input_df["tackle_indicators"] = (
+    (input_df["defenders_in_path"] >= 2) & 
+    (input_df["receivera"] < 0)
+).astype(int)
 
-# Assign results to new column
-input_df["DTC"] = DTC
 
 # Prepare features and target
 x = input_df[[
     "friends_bucket",
-    #"offense_form_bucket",
-    "nearest_def_cover_bucket",
     "defender_separation_encoded",
     "blocking_advantage",
     "separation_x_pass_length",
@@ -170,13 +86,15 @@ x = input_df[[
     "receiverdir",
     "defenders_in_path",
     "pass_length",
-    #"yards_to_go",
-    #"yardline_num" ,
-    #"yardline_squeezed" ,
+    "yards_to_go",
+    "yardline_num" ,
+    "yardline_squeezed" ,
     "receiver_momentum" ,
     "defender_density_ratio" ,
-    #"receiver_near_sideline",
-    "DTC",
+    "receiver_near_sideline",
+    "defender_pressure",
+    "tackle_indicators",
+    "distance_to_nearest_def"
 ]].copy()
  
 # Define feature weights (higher = more important)
@@ -191,13 +109,13 @@ feature_weights = {
     "receiverdir": 2.5,
     "pass_length": 2.25,
     "receivery": 2.0,
+    "distance_to_nearest_def": 10,
     # All other features get default weight of 1.0
 }
 
 y = input_df["yards_gained"].clip(lower=0).apply(
     lambda y: 0 if y == 0 else 1 if 1 <= y <= 5 else 2 if 6 <= y <= 10 else 3
 )
-print(pd.Series(y).value_counts().sort_index())
 
 # Model training
 params = {
@@ -251,6 +169,8 @@ for fold, (train_idx, test_idx) in enumerate(kfold.split(x)):
 preds_concat = np.vstack(all_preds)
 true_labels = pd.concat(all_true, ignore_index=True)
 predicted_classes = np.argmax(preds_concat, axis=1)
+
+
 
 # Evaluation
 class_names = ["0 yards", "1-5 yards", "6-10 yards", "11+ yards"]
@@ -306,7 +226,6 @@ with open('test.txt', 'w') as f:
         f.write(f"\nFINAL PREDICTION: {class_names[np.argmax(pred)]} ({np.max(pred):.1%} confidence)\n")
         f.write("="*50 + "\n")
 
-        
         # 1. Initialize SHAP explainer
         explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(x_test)
@@ -333,89 +252,3 @@ with open('test.txt', 'w') as f:
             plt.tight_layout()
             plt.savefig(f'shap_play_{i+1}.png')
             plt.close()  # Close plot to prevent display if running in notebook
-            
-
-#SAVING RELOADING AND RANKING WITH MODEL
-model.save_model("xgbModel.json")
-
-loaded_model = xgb.Booster()
-loaded_model.load_model("xgbModel.json")
-
-input_df = pd.read_csv(r"ranking_test_subset.csv", 
-                      usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", 
-                              "receivero", "receiverdir", "distance_to_nearest_def", "defenders_in_path",
-                              "friends_in_path", "pass_length", "yards_to_go", "yardline_num"])
-
-input_df = input_df[input_df["pass_length"] > 0]
-
-pass_lengths = input_df["pass_length"]
-
-input_df["defender_separation_encoded"] = input_df["distance_to_nearest_def"].apply(bucket_separation)
-input_df["friends_bucket"] = input_df["friends_in_path"].apply(bucket_friends)
-input_df["blocking_advantage"] = input_df["friends_bucket"] - np.floor(input_df["defenders_in_path"] / 2)
-input_df["separation_x_pass_length"] = input_df["defender_separation_encoded"] * input_df["pass_length"]
-
-# 1. Receiver's positioning advantage (sideline vs. middle)
-input_df["receiver_near_sideline"] = (np.abs(input_df["receiverx"]) > 30).astype(int)
-
-# 2. Defender density ratio
-input_df["defender_density_ratio"] = input_df["defenders_in_path"] / (input_df["distance_to_nearest_def"] + 0.1)
-
-# 3. Directional momentum (receiver speed × direction)
-input_df["receiver_momentum"] = input_df["receivers"] * np.cos(np.radians(input_df["receiverdir"]))
-
-# 4. Field position impact (compressed yardline)
-input_df["yardline_squeezed"] = np.log1p(input_df["yardline_num"])
-
-# Prepare features and target
-ranking_test = input_df[[
-    "friends_bucket",
-    "defender_separation_encoded",
-    "blocking_advantage",
-    "separation_x_pass_length",
-    "receiverx",
-    "receivery",
-    "receivers",
-    "receivera",
-    "receiverdis",
-    "receivero",
-    "receiverdir",
-    "defenders_in_path",
-    "pass_length",
-    "yards_to_go",
-    "yardline_num" ,
-    "yardline_squeezed" ,
-    "receiver_momentum" ,
-    "defender_density_ratio" ,
-    "receiver_near_sideline",
-]].copy()
- 
-ranking_test = xgb.DMatrix(ranking_test)
-
-# You can now use it for prediction
-ranking_pred = loaded_model.predict(ranking_test)
-
-print(ranking_pred)
-predicted_classes = np.argmax(ranking_pred, axis=1)
-print(predicted_classes)
-
-results = pd.DataFrame({
-    'predicted_class': predicted_classes,
-    'pass_length': pass_lengths
-})
-
-print(results)
-
-#Deciding rankings
-sample_max_throw_dist = 12
-
-#results now only includes passes that are within the players range
-results = results[results["pass_length"] <= sample_max_throw_dist]
-
-rankings = results.sort_values(by=['predicted_class', 'pass_length'], ascending=[False, True])
-
-# Add a rank column starting at 1
-rankings["rank"] = range(1, len(rankings) + 1)
-
-print(rankings)
-
