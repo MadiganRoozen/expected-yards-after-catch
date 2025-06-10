@@ -2,912 +2,171 @@ XGBOOST DECISION TREE ANALYSIS
 ==================================================
 
 
-PLAY #1 - ACTUAL YARDS: 2
+PLAY #1 - ACTUAL YARDS: 3
 --------------------------------------------------
 
 PLAY DATA:
-           friends_bucket: 0.000
-defender_separation_encoded: 1.000
+           friends_bucket: 1.000
+ nearest_def_cover_bucket: 0.000
+defender_separation_encoded: 2.000
        blocking_advantage: 0.000
- separation_x_pass_length: 10.000
-                receiverx: 87.160
-                receivery: 5.210
-                receivers: 3.560
-                receivera: 3.890
-              receiverdis: 0.370
-                receivero: 45.580
-              receiverdir: 158.120
-        defenders_in_path: 0.000
-              pass_length: 10.000
-              yards_to_go: 5.000
-             yardline_num: 13.000
-        yardline_squeezed: 2.639
-        receiver_momentum: -3.304
-   defender_density_ratio: 0.000
-   receiver_near_sideline: 1.000
-
-DECISION PATH:
-
-Tree 0:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[receivers<6.13999987] yes=3,no=4,missing=4
-		3:[friends_bucket<3] yes=7,no=8,missing=8
-			7:[defender_density_ratio<0.0102253081] yes=15,no=16,missing=16
-				15:[yards_to_go<2] yes=31,no=32,missing=32
-				16:[separation_x_pass_length<1] yes=33,no=34,missing=34
-			8:[receivers<3.94000006] yes=17,no=18,missing=18
-				17:[receiverdir<332.235901] yes=35,no=36,missing=36
-				18:[yardline_num<24] yes=37,no=38,missing=38
-		4:[defender_density_ratio<0.0102253081] yes=9,no=10,missing=10
-			9:[separation_x_pass_length<16.1093884] yes=19,no=20,missing=20
-				19:[receiverdir<197.770004] yes=39,no=40,missing=40
-				20:[receivery<2.38000011] yes=41,no=42,missing=42
-			10:[blocking_advantage<2] yes=21,no=22,missing=22
-				21:[blocking_advantage<-1.93715942] yes=43,no=44,missing=44
-				22:[receiverdir<199.220001] yes=45,no=46,missing=46
-	2:[receivery<50.1899986] yes=5,no=6,missing=6
-		5:[receivery<1.75] yes=11,no=12,missing=12
-			11:[receiverdir<223.325089] yes=23,no=24,missing=24
-				23:[receiverdir<138.580002] yes=47,no=48,missing=48
-				24:[blocking_advantage<0.0326698683] yes=49,no=50,missing=50
-			12:[defender_density_ratio<2.76227379] yes=25,no=26,missing=26
-				25:[defender_density_ratio<0.0102253081] yes=51,no=52,missing=52
-				26:[separation_x_pass_length<6.74260426] yes=53,no=54,missing=54
-		6:[defender_density_ratio<0.0102253081] yes=13,no=14,missing=14
-			13:[separation_x_pass_length<36.2029152] yes=27,no=28,missing=28
-				27:[receivers<1.84000003] yes=55,no=56,missing=56
-				28:[receiverdir<307.979279] yes=57,no=58,missing=58
-			14:[yardline_num<36] yes=29,no=30,missing=30
-				30:[pass_length<9.1632576] yes=59,no=60,missing=60
-
-Tree 1:
-0:[yardline_num<13] yes=1,no=2,missing=2
-	1:[pass_length<4.05907822] yes=3,no=4,missing=4
-		3:[yardline_num<8] yes=7,no=8,missing=8
-			7:[receivery<16.5200005] yes=15,no=16,missing=16
-				15:[receivery<14.0100002] yes=29,no=30,missing=30
-			8:[receivers<6.92657804] yes=17,no=18,missing=18
-				17:[yards_to_go<12] yes=31,no=32,missing=32
-		4:[receivero<304.689575] yes=9,no=10,missing=10
-			9:[receiverdis<0.358789623] yes=19,no=20,missing=20
-				19:[receivery<32.8100014] yes=33,no=34,missing=34
-				20:[receivero<116.300003] yes=35,no=36,missing=36
-			10:[receiverdir<19.848877] yes=21,no=22,missing=22
-				22:[receivers<2.78999996] yes=37,no=38,missing=38
-	2:[blocking_advantage<-1.93715942] yes=5,no=6,missing=6
-		5:[defender_density_ratio<7.59841156] yes=11,no=12,missing=12
-			11:[receivers<4.69999981] yes=23,no=24,missing=24
-				23:[blocking_advantage<-2] yes=39,no=40,missing=40
-				24:[yardline_num<36] yes=41,no=42,missing=42
-			12:[yardline_num<44] yes=25,no=26,missing=26
-				25:[pass_length<3.05799651] yes=43,no=44,missing=44
-		6:[blocking_advantage<-1.00044847] yes=13,no=14,missing=14
-			14:[blocking_advantage<-0.982067168] yes=27,no=28,missing=28
-				27:[receiverdis<0.109999999] yes=45,no=46,missing=46
-				28:[blocking_advantage<0] yes=47,no=48,missing=48
-
-Tree 2:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[defender_density_ratio<0.0102253081] yes=3,no=4,missing=4
-		3:[receivers<8.46000004] yes=7,no=8,missing=8
-			7:[separation_x_pass_length<29.3963966] yes=15,no=16,missing=16
-				15:[blocking_advantage<0.666962326] yes=31,no=32,missing=32
-				16:[receivero<60.436657] yes=33,no=34,missing=34
-			8:[receivery<47.2835693] yes=17,no=18,missing=18
-				17:[receiver_momentum<-3.98034453] yes=35,no=36,missing=36
-				18:[receiver_momentum<2.31518626] yes=37,no=38,missing=38
-		4:[defender_density_ratio<3.97133708] yes=9,no=10,missing=10
-			9:[defenders_in_path<4] yes=19,no=20,missing=20
-				19:[defenders_in_path<1] yes=39,no=40,missing=40
-				20:[receivers<2.45034456] yes=41,no=42,missing=42
-			10:[separation_x_pass_length<19.3058224] yes=21,no=22,missing=22
-				21:[receivero<350.624359] yes=43,no=44,missing=44
-				22:[receivery<12.6272402] yes=45,no=46,missing=46
-	2:[pass_length<4.98857355] yes=5,no=6,missing=6
-		5:[receivers<6.84773397] yes=11,no=12,missing=12
-			11:[defender_density_ratio<0.126602829] yes=23,no=24,missing=24
-				23:[receiver_momentum<6.001194] yes=47,no=48,missing=48
-				24:[receiverdir<11.0600004] yes=49,no=50,missing=50
-			12:[receiverdir<18.1399994] yes=25,no=26,missing=26
-				25:[receivero<345.240631] yes=51,no=52,missing=52
-				26:[receivery<10.7316418] yes=53,no=54,missing=54
-		6:[defender_density_ratio<0.126602829] yes=13,no=14,missing=14
-			13:[yards_to_go<9] yes=27,no=28,missing=28
-				27:[yardline_squeezed<3.89088345] yes=55,no=56,missing=56
-				28:[receivery<6.36999989] yes=57,no=58,missing=58
-			14:[receivers<2.4000001] yes=29,no=30,missing=30
-				29:[defender_density_ratio<0.326040298] yes=59,no=60,missing=60
-				30:[receivers<7.0999999] yes=61,no=62,missing=62
-
-Tree 3:
-0:[receivers<6.71404314] yes=1,no=2,missing=2
-	1:[separation_x_pass_length<36.2029152] yes=3,no=4,missing=4
-		3:[receiverdis<0.461812764] yes=7,no=8,missing=8
-			7:[friends_bucket<3] yes=15,no=16,missing=16
-				15:[receiverdir<136.779999] yes=31,no=32,missing=32
-				16:[receivero<16.0596695] yes=33,no=34,missing=34
-			8:[defender_density_ratio<0.0102253081] yes=17,no=18,missing=18
-				17:[defender_separation_encoded<4] yes=35,no=36,missing=36
-				18:[defender_density_ratio<2.19646168] yes=37,no=38,missing=38
-		4:[pass_length<17.965704] yes=9,no=10,missing=10
-			9:[yardline_num<26] yes=19,no=20,missing=20
-				19:[receivero<224.059998] yes=39,no=40,missing=40
-				20:[receiverdir<292.920013] yes=41,no=42,missing=42
-			10:[defender_density_ratio<0.521165192] yes=21,no=22,missing=22
-				21:[receiver_momentum<-2.82055116] yes=43,no=44,missing=44
-				22:[separation_x_pass_length<67.773201] yes=45,no=46,missing=46
-	2:[defender_density_ratio<0.0102253081] yes=5,no=6,missing=6
-		5:[blocking_advantage<0.0326698683] yes=11,no=12,missing=12
-			11:[defender_separation_encoded<3] yes=23,no=24,missing=24
-				23:[separation_x_pass_length<76] yes=47,no=48,missing=48
-				24:[receiverdis<0.710441351] yes=49,no=50,missing=50
-			12:[receivera<2.3499999] yes=25,no=26,missing=26
-				25:[separation_x_pass_length<25.5742054] yes=51,no=52,missing=52
-				26:[receivero<53.7200012] yes=53,no=54,missing=54
-		6:[defender_density_ratio<2.31731606] yes=13,no=14,missing=14
-			13:[blocking_advantage<0] yes=27,no=28,missing=28
-				27:[pass_length<2.0416739] yes=55,no=56,missing=56
-				28:[receiverdir<28.2323341] yes=57,no=58,missing=58
-			14:[receivera<1.00739217] yes=29,no=30,missing=30
-				29:[receivero<212.567108] yes=59,no=60,missing=60
-
-Tree 4:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[receiverdis<0.38021636] yes=3,no=4,missing=4
-		3:[defender_density_ratio<7.10793591] yes=7,no=8,missing=8
-			7:[blocking_advantage<0] yes=15,no=16,missing=16
-				15:[defenders_in_path<4] yes=31,no=32,missing=32
-				16:[receiverx<65.5299988] yes=33,no=34,missing=34
-			8:[receiverdir<339.836945] yes=17,no=18,missing=18
-		4:[defender_density_ratio<0.0102253081] yes=9,no=10,missing=10
-			9:[separation_x_pass_length<20.4487534] yes=19,no=20,missing=20
-				19:[receiverx<34.531353] yes=35,no=36,missing=36
-				20:[receiverdir<254.710007] yes=37,no=38,missing=38
-			10:[blocking_advantage<2] yes=21,no=22,missing=22
-				21:[defender_density_ratio<5.50647306] yes=39,no=40,missing=40
-				22:[defender_density_ratio<2.76227379] yes=41,no=42,missing=42
-	2:[defender_density_ratio<0.0102253081] yes=5,no=6,missing=6
-		5:[receivers<6.17999983] yes=11,no=12,missing=12
-			11:[pass_length<5.14707661] yes=23,no=24,missing=24
-				23:[defender_separation_encoded<3] yes=43,no=44,missing=44
-				24:[receivers<2.4000001] yes=45,no=46,missing=46
-			12:[separation_x_pass_length<44] yes=25,no=26,missing=26
-				25:[pass_length<8.48107338] yes=47,no=48,missing=48
-		6:[receivers<2.28999996] yes=13,no=14,missing=14
-			13:[defender_separation_encoded<3] yes=27,no=28,missing=28
-				27:[pass_length<4.98857355] yes=49,no=50,missing=50
-				28:[receiverx<27.2314777] yes=51,no=52,missing=52
-			14:[receiverdir<15.3881111] yes=29,no=30,missing=30
-				29:[defender_density_ratio<1.97141755] yes=53,no=54,missing=54
-				30:[defender_density_ratio<4.11132097] yes=55,no=56,missing=56
-
-FINAL PREDICTION: 0 yards (69.8% confidence)
-==================================================
-
-PLAY #2 - ACTUAL YARDS: 3
---------------------------------------------------
-
-PLAY DATA:
-           friends_bucket: 2.000
-defender_separation_encoded: 3.000
-       blocking_advantage: 1.000
- separation_x_pass_length: 6.000
-                receiverx: 38.290
-                receivery: 16.170
-                receivers: 8.040
-                receivera: 2.440
-              receiverdis: 0.820
-                receivero: 143.710
-              receiverdir: 161.010
+ separation_x_pass_length: 76.000
+                receiverx: 36.860
+                receivery: 44.380
+                receivers: 7.970
+                receivera: 2.200
+              receiverdis: 0.810
+                receivero: 223.320
+              receiverdir: 251.950
         defenders_in_path: 2.000
-              pass_length: 2.000
-              yards_to_go: 10.000
-             yardline_num: 25.000
-        yardline_squeezed: 3.258
-        receiver_momentum: -7.602
-   defender_density_ratio: 0.305
-   receiver_near_sideline: 1.000
+              pass_length: 38.000
+        receiver_momentum: -2.469
+   defender_density_ratio: 0.710
+                      DTC: 13846.036
 
 DECISION PATH:
 
 Tree 0:
 0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[receivers<6.13999987] yes=3,no=4,missing=4
-		3:[friends_bucket<3] yes=7,no=8,missing=8
-			7:[defender_density_ratio<0.0102253081] yes=15,no=16,missing=16
-				15:[yards_to_go<2] yes=31,no=32,missing=32
-				16:[separation_x_pass_length<1] yes=33,no=34,missing=34
-			8:[receivers<3.94000006] yes=17,no=18,missing=18
-				17:[receiverdir<332.235901] yes=35,no=36,missing=36
-				18:[yardline_num<24] yes=37,no=38,missing=38
-		4:[defender_density_ratio<0.0102253081] yes=9,no=10,missing=10
-			9:[separation_x_pass_length<16.1093884] yes=19,no=20,missing=20
-				19:[receiverdir<197.770004] yes=39,no=40,missing=40
-				20:[receivery<2.38000011] yes=41,no=42,missing=42
-			10:[blocking_advantage<2] yes=21,no=22,missing=22
-				21:[blocking_advantage<-1.93715942] yes=43,no=44,missing=44
-				22:[receiverdir<199.220001] yes=45,no=46,missing=46
-	2:[receivery<50.1899986] yes=5,no=6,missing=6
-		5:[receivery<1.75] yes=11,no=12,missing=12
-			11:[receiverdir<223.325089] yes=23,no=24,missing=24
-				23:[receiverdir<138.580002] yes=47,no=48,missing=48
-				24:[blocking_advantage<0.0326698683] yes=49,no=50,missing=50
-			12:[defender_density_ratio<2.76227379] yes=25,no=26,missing=26
-				25:[defender_density_ratio<0.0102253081] yes=51,no=52,missing=52
-				26:[separation_x_pass_length<6.74260426] yes=53,no=54,missing=54
-		6:[defender_density_ratio<0.0102253081] yes=13,no=14,missing=14
-			13:[separation_x_pass_length<36.2029152] yes=27,no=28,missing=28
-				27:[receivers<1.84000003] yes=55,no=56,missing=56
-				28:[receiverdir<307.979279] yes=57,no=58,missing=58
-			14:[yardline_num<36] yes=29,no=30,missing=30
-				30:[pass_length<9.1632576] yes=59,no=60,missing=60
+	1:[blocking_advantage<2] yes=3,no=4,missing=4
+		3:[defender_density_ratio<0.0120715471] yes=7,no=8,missing=8
+			7:[separation_x_pass_length<20.3670197] yes=15,no=16,missing=16
+				15:[receivera<3.17617774] yes=27,no=28,missing=28
+				16:[receivery<0.569999993] yes=29,no=30,missing=30
+			8:[receivers<4.03000021] yes=17,no=18,missing=18
+				17:[defender_density_ratio<3.98777199] yes=31,no=32,missing=32
+				18:[separation_x_pass_length<1] yes=33,no=34,missing=34
+		4:[receivers<6.57999992] yes=9,no=10,missing=10
+			9:[blocking_advantage<3] yes=19,no=20,missing=20
+				19:[receivera<2.0395472] yes=35,no=36,missing=36
+			10:[receivera<1.00999999] yes=21,no=22,missing=22
+				22:[DTC<4.52335167] yes=37,no=38,missing=38
+	2:[receivery<1.84000003] yes=5,no=6,missing=6
+		5:[defender_density_ratio<0.251471341] yes=11,no=12,missing=12
+		6:[receivery<50.1899986] yes=13,no=14,missing=14
+			13:[receivers<2.3056159] yes=23,no=24,missing=24
+				23:[blocking_advantage<1.57071209] yes=39,no=40,missing=40
+				24:[receivery<3.75340533] yes=41,no=42,missing=42
+			14:[defender_density_ratio<0.171942249] yes=25,no=26,missing=26
+				25:[separation_x_pass_length<36.4897118] yes=43,no=44,missing=44
+				26:[defender_density_ratio<0.969082415] yes=45,no=46,missing=46
 
 Tree 1:
-0:[yardline_num<13] yes=1,no=2,missing=2
-	1:[pass_length<4.05907822] yes=3,no=4,missing=4
-		3:[yardline_num<8] yes=7,no=8,missing=8
-			7:[receivery<16.5200005] yes=15,no=16,missing=16
-				15:[receivery<14.0100002] yes=29,no=30,missing=30
-			8:[receivers<6.92657804] yes=17,no=18,missing=18
-				17:[yards_to_go<12] yes=31,no=32,missing=32
-		4:[receivero<304.689575] yes=9,no=10,missing=10
-			9:[receiverdis<0.358789623] yes=19,no=20,missing=20
-				19:[receivery<32.8100014] yes=33,no=34,missing=34
-				20:[receivero<116.300003] yes=35,no=36,missing=36
-			10:[receiverdir<19.848877] yes=21,no=22,missing=22
-				22:[receivers<2.78999996] yes=37,no=38,missing=38
-	2:[blocking_advantage<-1.93715942] yes=5,no=6,missing=6
-		5:[defender_density_ratio<7.59841156] yes=11,no=12,missing=12
-			11:[receivers<4.69999981] yes=23,no=24,missing=24
-				23:[blocking_advantage<-2] yes=39,no=40,missing=40
-				24:[yardline_num<36] yes=41,no=42,missing=42
-			12:[yardline_num<44] yes=25,no=26,missing=26
-				25:[pass_length<3.05799651] yes=43,no=44,missing=44
-		6:[blocking_advantage<-1.00044847] yes=13,no=14,missing=14
-			14:[blocking_advantage<-0.982067168] yes=27,no=28,missing=28
-				27:[receiverdis<0.109999999] yes=45,no=46,missing=46
-				28:[blocking_advantage<0] yes=47,no=48,missing=48
+0:[defenders_in_path<5] yes=1,no=2,missing=2
+	1:[receiverx<14.5799999] yes=3,no=4,missing=4
+		3:[receivers<3.20171285] yes=7,no=8,missing=8
+			8:[pass_length<1.08036959] yes=15,no=16,missing=16
+				16:[receivery<1.13] yes=25,no=26,missing=26
+		4:[receiverx<95.4499969] yes=9,no=10,missing=10
+			9:[defender_separation_encoded<3] yes=17,no=18,missing=18
+				17:[receivers<4.36999989] yes=27,no=28,missing=28
+				18:[receiverdis<0.192342103] yes=29,no=30,missing=30
+			10:[receiver_momentum<3.88464713] yes=19,no=20,missing=20
+				19:[receivers<2.86999989] yes=31,no=32,missing=32
+				20:[receivero<282.980011] yes=33,no=34,missing=34
+	2:[defender_separation_encoded<4] yes=5,no=6,missing=6
+		5:[receiver_momentum<-3.85737324] yes=11,no=12,missing=12
+			11:[receivery<36.3001785] yes=21,no=22,missing=22
+				21:[pass_length<2.07111669] yes=35,no=36,missing=36
+				22:[pass_length<4.91010046] yes=37,no=38,missing=38
+			12:[receivers<5.90999985] yes=23,no=24,missing=24
+				23:[receivery<31.5900002] yes=39,no=40,missing=40
+				24:[blocking_advantage<-1.50007689] yes=41,no=42,missing=42
+		6:[receiverx<83.9199982] yes=13,no=14,missing=14
 
 Tree 2:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[defender_density_ratio<0.0102253081] yes=3,no=4,missing=4
-		3:[receivers<8.46000004] yes=7,no=8,missing=8
-			7:[separation_x_pass_length<29.3963966] yes=15,no=16,missing=16
-				15:[blocking_advantage<0.666962326] yes=31,no=32,missing=32
-				16:[receivero<60.436657] yes=33,no=34,missing=34
-			8:[receivery<47.2835693] yes=17,no=18,missing=18
-				17:[receiver_momentum<-3.98034453] yes=35,no=36,missing=36
-				18:[receiver_momentum<2.31518626] yes=37,no=38,missing=38
-		4:[defender_density_ratio<3.97133708] yes=9,no=10,missing=10
-			9:[defenders_in_path<4] yes=19,no=20,missing=20
-				19:[defenders_in_path<1] yes=39,no=40,missing=40
-				20:[receivers<2.45034456] yes=41,no=42,missing=42
-			10:[separation_x_pass_length<19.3058224] yes=21,no=22,missing=22
-				21:[receivero<350.624359] yes=43,no=44,missing=44
-				22:[receivery<12.6272402] yes=45,no=46,missing=46
-	2:[pass_length<4.98857355] yes=5,no=6,missing=6
-		5:[receivers<6.84773397] yes=11,no=12,missing=12
-			11:[defender_density_ratio<0.126602829] yes=23,no=24,missing=24
-				23:[receiver_momentum<6.001194] yes=47,no=48,missing=48
-				24:[receiverdir<11.0600004] yes=49,no=50,missing=50
-			12:[receiverdir<18.1399994] yes=25,no=26,missing=26
-				25:[receivero<345.240631] yes=51,no=52,missing=52
-				26:[receivery<10.7316418] yes=53,no=54,missing=54
-		6:[defender_density_ratio<0.126602829] yes=13,no=14,missing=14
-			13:[yards_to_go<9] yes=27,no=28,missing=28
-				27:[yardline_squeezed<3.89088345] yes=55,no=56,missing=56
-				28:[receivery<6.36999989] yes=57,no=58,missing=58
-			14:[receivers<2.4000001] yes=29,no=30,missing=30
-				29:[defender_density_ratio<0.326040298] yes=59,no=60,missing=60
-				30:[receivers<7.0999999] yes=61,no=62,missing=62
+0:[defender_density_ratio<0.0120715471] yes=1,no=2,missing=2
+	1:[receivery<6.40999985] yes=3,no=4,missing=4
+		3:[receiverdir<92.6165161] yes=7,no=8,missing=8
+			8:[receivera<3.13000011] yes=15,no=16,missing=16
+				16:[receivery<2.6500001] yes=29,no=30,missing=30
+		4:[receivery<47.2400017] yes=9,no=10,missing=10
+			9:[receivera<1.44791853] yes=17,no=18,missing=18
+				17:[nearest_def_cover_bucket<2] yes=31,no=32,missing=32
+				18:[separation_x_pass_length<2.09596753] yes=33,no=34,missing=34
+			10:[receiver_momentum<1.65251613] yes=19,no=20,missing=20
+				19:[receivery<51.5] yes=35,no=36,missing=36
+				20:[receivera<4.26660967] yes=37,no=38,missing=38
+	2:[defender_density_ratio<3.08116817] yes=5,no=6,missing=6
+		5:[blocking_advantage<2] yes=11,no=12,missing=12
+			11:[separation_x_pass_length<10] yes=21,no=22,missing=22
+				21:[friends_bucket<1] yes=39,no=40,missing=40
+				22:[nearest_def_cover_bucket<5] yes=41,no=42,missing=42
+			12:[defender_density_ratio<0.445158511] yes=23,no=24,missing=24
+				23:[receiverdir<20.3700008] yes=43,no=44,missing=44
+				24:[defender_density_ratio<0.579291761] yes=45,no=46,missing=46
+		6:[receivers<5.90999985] yes=13,no=14,missing=14
+			13:[nearest_def_cover_bucket<1] yes=25,no=26,missing=26
+				25:[receivery<17.1700001] yes=47,no=48,missing=48
+				26:[defender_density_ratio<3.86041141] yes=49,no=50,missing=50
+			14:[receivery<20.5200005] yes=27,no=28,missing=28
+				27:[receivery<19.4899998] yes=51,no=52,missing=52
+				28:[separation_x_pass_length<15.1994896] yes=53,no=54,missing=54
 
 Tree 3:
-0:[receivers<6.71404314] yes=1,no=2,missing=2
-	1:[separation_x_pass_length<36.2029152] yes=3,no=4,missing=4
-		3:[receiverdis<0.461812764] yes=7,no=8,missing=8
-			7:[friends_bucket<3] yes=15,no=16,missing=16
-				15:[receiverdir<136.779999] yes=31,no=32,missing=32
-				16:[receivero<16.0596695] yes=33,no=34,missing=34
-			8:[defender_density_ratio<0.0102253081] yes=17,no=18,missing=18
-				17:[defender_separation_encoded<4] yes=35,no=36,missing=36
-				18:[defender_density_ratio<2.19646168] yes=37,no=38,missing=38
-		4:[pass_length<17.965704] yes=9,no=10,missing=10
-			9:[yardline_num<26] yes=19,no=20,missing=20
-				19:[receivero<224.059998] yes=39,no=40,missing=40
-				20:[receiverdir<292.920013] yes=41,no=42,missing=42
-			10:[defender_density_ratio<0.521165192] yes=21,no=22,missing=22
-				21:[receiver_momentum<-2.82055116] yes=43,no=44,missing=44
-				22:[separation_x_pass_length<67.773201] yes=45,no=46,missing=46
-	2:[defender_density_ratio<0.0102253081] yes=5,no=6,missing=6
-		5:[blocking_advantage<0.0326698683] yes=11,no=12,missing=12
-			11:[defender_separation_encoded<3] yes=23,no=24,missing=24
-				23:[separation_x_pass_length<76] yes=47,no=48,missing=48
-				24:[receiverdis<0.710441351] yes=49,no=50,missing=50
-			12:[receivera<2.3499999] yes=25,no=26,missing=26
-				25:[separation_x_pass_length<25.5742054] yes=51,no=52,missing=52
-				26:[receivero<53.7200012] yes=53,no=54,missing=54
-		6:[defender_density_ratio<2.31731606] yes=13,no=14,missing=14
-			13:[blocking_advantage<0] yes=27,no=28,missing=28
-				27:[pass_length<2.0416739] yes=55,no=56,missing=56
-				28:[receiverdir<28.2323341] yes=57,no=58,missing=58
-			14:[receivera<1.00739217] yes=29,no=30,missing=30
-				29:[receivero<212.567108] yes=59,no=60,missing=60
+0:[receivers<6.73999977] yes=1,no=2,missing=2
+	1:[defender_separation_encoded<3] yes=3,no=4,missing=4
+		3:[receivers<4.34000015] yes=7,no=8,missing=8
+			7:[DTC<824.282654] yes=15,no=16,missing=16
+				15:[separation_x_pass_length<13.0484095] yes=31,no=32,missing=32
+				16:[receivero<160.419998] yes=33,no=34,missing=34
+			8:[defender_density_ratio<0.0120715471] yes=17,no=18,missing=18
+				17:[receivers<6.61999989] yes=35,no=36,missing=36
+				18:[defender_density_ratio<1.41186726] yes=37,no=38,missing=38
+		4:[separation_x_pass_length<39.1772308] yes=9,no=10,missing=10
+			9:[receivers<4.73999977] yes=19,no=20,missing=20
+				19:[receiverdir<181.399994] yes=39,no=40,missing=40
+				20:[receivery<43.1399994] yes=41,no=42,missing=42
+			10:[receivery<8.24106789] yes=21,no=22,missing=22
+				21:[separation_x_pass_length<50.8193626] yes=43,no=44,missing=44
+				22:[receiverdir<180.350006] yes=45,no=46,missing=46
+	2:[defender_density_ratio<0.0120715471] yes=5,no=6,missing=6
+		5:[defender_separation_encoded<3] yes=11,no=12,missing=12
+			11:[defender_separation_encoded<2] yes=23,no=24,missing=24
+				23:[blocking_advantage<0.966716647] yes=47,no=48,missing=48
+				24:[receivery<46.5600014] yes=49,no=50,missing=50
+			12:[receivery<9.10000038] yes=25,no=26,missing=26
+				26:[receiverdir<346.320007] yes=51,no=52,missing=52
+		6:[defender_density_ratio<2.30610847] yes=13,no=14,missing=14
+			13:[DTC<14.6037369] yes=27,no=28,missing=28
+				27:[DTC<-10.6604843] yes=53,no=54,missing=54
+				28:[receiverx<26.8700008] yes=55,no=56,missing=56
+			14:[receivery<36.3001785] yes=29,no=30,missing=30
+				29:[receivero<353.189575] yes=57,no=58,missing=58
+				30:[separation_x_pass_length<9.28691959] yes=59,no=60,missing=60
 
 Tree 4:
 0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[receiverdis<0.38021636] yes=3,no=4,missing=4
-		3:[defender_density_ratio<7.10793591] yes=7,no=8,missing=8
-			7:[blocking_advantage<0] yes=15,no=16,missing=16
-				15:[defenders_in_path<4] yes=31,no=32,missing=32
-				16:[receiverx<65.5299988] yes=33,no=34,missing=34
-			8:[receiverdir<339.836945] yes=17,no=18,missing=18
-		4:[defender_density_ratio<0.0102253081] yes=9,no=10,missing=10
-			9:[separation_x_pass_length<20.4487534] yes=19,no=20,missing=20
-				19:[receiverx<34.531353] yes=35,no=36,missing=36
-				20:[receiverdir<254.710007] yes=37,no=38,missing=38
-			10:[blocking_advantage<2] yes=21,no=22,missing=22
-				21:[defender_density_ratio<5.50647306] yes=39,no=40,missing=40
-				22:[defender_density_ratio<2.76227379] yes=41,no=42,missing=42
-	2:[defender_density_ratio<0.0102253081] yes=5,no=6,missing=6
-		5:[receivers<6.17999983] yes=11,no=12,missing=12
-			11:[pass_length<5.14707661] yes=23,no=24,missing=24
-				23:[defender_separation_encoded<3] yes=43,no=44,missing=44
-				24:[receivers<2.4000001] yes=45,no=46,missing=46
-			12:[separation_x_pass_length<44] yes=25,no=26,missing=26
-				25:[pass_length<8.48107338] yes=47,no=48,missing=48
-		6:[receivers<2.28999996] yes=13,no=14,missing=14
-			13:[defender_separation_encoded<3] yes=27,no=28,missing=28
-				27:[pass_length<4.98857355] yes=49,no=50,missing=50
-				28:[receiverx<27.2314777] yes=51,no=52,missing=52
-			14:[receiverdir<15.3881111] yes=29,no=30,missing=30
-				29:[defender_density_ratio<1.97141755] yes=53,no=54,missing=54
-				30:[defender_density_ratio<4.11132097] yes=55,no=56,missing=56
+	1:[receiverdis<0.373503298] yes=3,no=4,missing=4
+		3:[defenders_in_path<4] yes=7,no=8,missing=8
+			7:[DTC<1.7075516] yes=15,no=16,missing=16
+				15:[separation_x_pass_length<9.28691959] yes=31,no=32,missing=32
+				16:[receiver_momentum<-0.504659414] yes=33,no=34,missing=34
+			8:[defender_density_ratio<3.637012] yes=17,no=18,missing=18
+				17:[receivery<11.5912762] yes=35,no=36,missing=36
+				18:[receiverdir<242.632706] yes=37,no=38,missing=38
+		4:[defender_density_ratio<0.0120715471] yes=9,no=10,missing=10
+			9:[separation_x_pass_length<15.1994896] yes=19,no=20,missing=20
+				19:[pass_length<1.23365021] yes=39,no=40,missing=40
+				20:[receivery<4.5] yes=41,no=42,missing=42
+			10:[receiverdir<10.0900002] yes=21,no=22,missing=22
+				21:[DTC<-0.299659491] yes=43,no=44,missing=44
+				22:[defender_density_ratio<4.18702126] yes=45,no=46,missing=46
+	2:[defender_density_ratio<0.0120715471] yes=5,no=6,missing=6
+		5:[receivery<49.9260674] yes=11,no=12,missing=12
+			11:[receivery<3.25999999] yes=23,no=24,missing=24
+				23:[receiverdir<158.119202] yes=47,no=48,missing=48
+				24:[receivers<6.0474968] yes=49,no=50,missing=50
+			12:[separation_x_pass_length<36.4897118] yes=25,no=26,missing=26
+				25:[receiverdir<60.0376701] yes=51,no=52,missing=52
+				26:[receiverdir<320.950012] yes=53,no=54,missing=54
+		6:[receivers<2.3056159] yes=13,no=14,missing=14
+			13:[DTC<4.06135321] yes=27,no=28,missing=28
+				27:[defenders_in_path<5] yes=55,no=56,missing=56
+				28:[receiver_momentum<-1.91720819] yes=57,no=58,missing=58
+			14:[receiverdir<14.0993671] yes=29,no=30,missing=30
+				29:[receivery<47.2400017] yes=59,no=60,missing=60
+				30:[receiverdir<347.769989] yes=61,no=62,missing=62
 
-FINAL PREDICTION: 6-10 yards (45.0% confidence)
-==================================================
-
-PLAY #3 - ACTUAL YARDS: 1
---------------------------------------------------
-
-PLAY DATA:
-           friends_bucket: 0.000
-defender_separation_encoded: 2.000
-       blocking_advantage: -3.000
- separation_x_pass_length: 30.000
-                receiverx: 70.240
-                receivery: 23.940
-                receivers: 1.140
-                receivera: 1.600
-              receiverdis: 0.130
-                receivero: 279.880
-              receiverdir: 17.430
-        defenders_in_path: 6.000
-              pass_length: 15.000
-              yards_to_go: 10.000
-             yardline_num: 45.000
-        yardline_squeezed: 3.829
-        receiver_momentum: 1.088
-   defender_density_ratio: 2.503
-   receiver_near_sideline: 1.000
-
-DECISION PATH:
-
-Tree 0:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[receivers<6.13999987] yes=3,no=4,missing=4
-		3:[friends_bucket<3] yes=7,no=8,missing=8
-			7:[defender_density_ratio<0.0102253081] yes=15,no=16,missing=16
-				15:[yards_to_go<2] yes=31,no=32,missing=32
-				16:[separation_x_pass_length<1] yes=33,no=34,missing=34
-			8:[receivers<3.94000006] yes=17,no=18,missing=18
-				17:[receiverdir<332.235901] yes=35,no=36,missing=36
-				18:[yardline_num<24] yes=37,no=38,missing=38
-		4:[defender_density_ratio<0.0102253081] yes=9,no=10,missing=10
-			9:[separation_x_pass_length<16.1093884] yes=19,no=20,missing=20
-				19:[receiverdir<197.770004] yes=39,no=40,missing=40
-				20:[receivery<2.38000011] yes=41,no=42,missing=42
-			10:[blocking_advantage<2] yes=21,no=22,missing=22
-				21:[blocking_advantage<-1.93715942] yes=43,no=44,missing=44
-				22:[receiverdir<199.220001] yes=45,no=46,missing=46
-	2:[receivery<50.1899986] yes=5,no=6,missing=6
-		5:[receivery<1.75] yes=11,no=12,missing=12
-			11:[receiverdir<223.325089] yes=23,no=24,missing=24
-				23:[receiverdir<138.580002] yes=47,no=48,missing=48
-				24:[blocking_advantage<0.0326698683] yes=49,no=50,missing=50
-			12:[defender_density_ratio<2.76227379] yes=25,no=26,missing=26
-				25:[defender_density_ratio<0.0102253081] yes=51,no=52,missing=52
-				26:[separation_x_pass_length<6.74260426] yes=53,no=54,missing=54
-		6:[defender_density_ratio<0.0102253081] yes=13,no=14,missing=14
-			13:[separation_x_pass_length<36.2029152] yes=27,no=28,missing=28
-				27:[receivers<1.84000003] yes=55,no=56,missing=56
-				28:[receiverdir<307.979279] yes=57,no=58,missing=58
-			14:[yardline_num<36] yes=29,no=30,missing=30
-				30:[pass_length<9.1632576] yes=59,no=60,missing=60
-
-Tree 1:
-0:[yardline_num<13] yes=1,no=2,missing=2
-	1:[pass_length<4.05907822] yes=3,no=4,missing=4
-		3:[yardline_num<8] yes=7,no=8,missing=8
-			7:[receivery<16.5200005] yes=15,no=16,missing=16
-				15:[receivery<14.0100002] yes=29,no=30,missing=30
-			8:[receivers<6.92657804] yes=17,no=18,missing=18
-				17:[yards_to_go<12] yes=31,no=32,missing=32
-		4:[receivero<304.689575] yes=9,no=10,missing=10
-			9:[receiverdis<0.358789623] yes=19,no=20,missing=20
-				19:[receivery<32.8100014] yes=33,no=34,missing=34
-				20:[receivero<116.300003] yes=35,no=36,missing=36
-			10:[receiverdir<19.848877] yes=21,no=22,missing=22
-				22:[receivers<2.78999996] yes=37,no=38,missing=38
-	2:[blocking_advantage<-1.93715942] yes=5,no=6,missing=6
-		5:[defender_density_ratio<7.59841156] yes=11,no=12,missing=12
-			11:[receivers<4.69999981] yes=23,no=24,missing=24
-				23:[blocking_advantage<-2] yes=39,no=40,missing=40
-				24:[yardline_num<36] yes=41,no=42,missing=42
-			12:[yardline_num<44] yes=25,no=26,missing=26
-				25:[pass_length<3.05799651] yes=43,no=44,missing=44
-		6:[blocking_advantage<-1.00044847] yes=13,no=14,missing=14
-			14:[blocking_advantage<-0.982067168] yes=27,no=28,missing=28
-				27:[receiverdis<0.109999999] yes=45,no=46,missing=46
-				28:[blocking_advantage<0] yes=47,no=48,missing=48
-
-Tree 2:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[defender_density_ratio<0.0102253081] yes=3,no=4,missing=4
-		3:[receivers<8.46000004] yes=7,no=8,missing=8
-			7:[separation_x_pass_length<29.3963966] yes=15,no=16,missing=16
-				15:[blocking_advantage<0.666962326] yes=31,no=32,missing=32
-				16:[receivero<60.436657] yes=33,no=34,missing=34
-			8:[receivery<47.2835693] yes=17,no=18,missing=18
-				17:[receiver_momentum<-3.98034453] yes=35,no=36,missing=36
-				18:[receiver_momentum<2.31518626] yes=37,no=38,missing=38
-		4:[defender_density_ratio<3.97133708] yes=9,no=10,missing=10
-			9:[defenders_in_path<4] yes=19,no=20,missing=20
-				19:[defenders_in_path<1] yes=39,no=40,missing=40
-				20:[receivers<2.45034456] yes=41,no=42,missing=42
-			10:[separation_x_pass_length<19.3058224] yes=21,no=22,missing=22
-				21:[receivero<350.624359] yes=43,no=44,missing=44
-				22:[receivery<12.6272402] yes=45,no=46,missing=46
-	2:[pass_length<4.98857355] yes=5,no=6,missing=6
-		5:[receivers<6.84773397] yes=11,no=12,missing=12
-			11:[defender_density_ratio<0.126602829] yes=23,no=24,missing=24
-				23:[receiver_momentum<6.001194] yes=47,no=48,missing=48
-				24:[receiverdir<11.0600004] yes=49,no=50,missing=50
-			12:[receiverdir<18.1399994] yes=25,no=26,missing=26
-				25:[receivero<345.240631] yes=51,no=52,missing=52
-				26:[receivery<10.7316418] yes=53,no=54,missing=54
-		6:[defender_density_ratio<0.126602829] yes=13,no=14,missing=14
-			13:[yards_to_go<9] yes=27,no=28,missing=28
-				27:[yardline_squeezed<3.89088345] yes=55,no=56,missing=56
-				28:[receivery<6.36999989] yes=57,no=58,missing=58
-			14:[receivers<2.4000001] yes=29,no=30,missing=30
-				29:[defender_density_ratio<0.326040298] yes=59,no=60,missing=60
-				30:[receivers<7.0999999] yes=61,no=62,missing=62
-
-Tree 3:
-0:[receivers<6.71404314] yes=1,no=2,missing=2
-	1:[separation_x_pass_length<36.2029152] yes=3,no=4,missing=4
-		3:[receiverdis<0.461812764] yes=7,no=8,missing=8
-			7:[friends_bucket<3] yes=15,no=16,missing=16
-				15:[receiverdir<136.779999] yes=31,no=32,missing=32
-				16:[receivero<16.0596695] yes=33,no=34,missing=34
-			8:[defender_density_ratio<0.0102253081] yes=17,no=18,missing=18
-				17:[defender_separation_encoded<4] yes=35,no=36,missing=36
-				18:[defender_density_ratio<2.19646168] yes=37,no=38,missing=38
-		4:[pass_length<17.965704] yes=9,no=10,missing=10
-			9:[yardline_num<26] yes=19,no=20,missing=20
-				19:[receivero<224.059998] yes=39,no=40,missing=40
-				20:[receiverdir<292.920013] yes=41,no=42,missing=42
-			10:[defender_density_ratio<0.521165192] yes=21,no=22,missing=22
-				21:[receiver_momentum<-2.82055116] yes=43,no=44,missing=44
-				22:[separation_x_pass_length<67.773201] yes=45,no=46,missing=46
-	2:[defender_density_ratio<0.0102253081] yes=5,no=6,missing=6
-		5:[blocking_advantage<0.0326698683] yes=11,no=12,missing=12
-			11:[defender_separation_encoded<3] yes=23,no=24,missing=24
-				23:[separation_x_pass_length<76] yes=47,no=48,missing=48
-				24:[receiverdis<0.710441351] yes=49,no=50,missing=50
-			12:[receivera<2.3499999] yes=25,no=26,missing=26
-				25:[separation_x_pass_length<25.5742054] yes=51,no=52,missing=52
-				26:[receivero<53.7200012] yes=53,no=54,missing=54
-		6:[defender_density_ratio<2.31731606] yes=13,no=14,missing=14
-			13:[blocking_advantage<0] yes=27,no=28,missing=28
-				27:[pass_length<2.0416739] yes=55,no=56,missing=56
-				28:[receiverdir<28.2323341] yes=57,no=58,missing=58
-			14:[receivera<1.00739217] yes=29,no=30,missing=30
-				29:[receivero<212.567108] yes=59,no=60,missing=60
-
-Tree 4:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[receiverdis<0.38021636] yes=3,no=4,missing=4
-		3:[defender_density_ratio<7.10793591] yes=7,no=8,missing=8
-			7:[blocking_advantage<0] yes=15,no=16,missing=16
-				15:[defenders_in_path<4] yes=31,no=32,missing=32
-				16:[receiverx<65.5299988] yes=33,no=34,missing=34
-			8:[receiverdir<339.836945] yes=17,no=18,missing=18
-		4:[defender_density_ratio<0.0102253081] yes=9,no=10,missing=10
-			9:[separation_x_pass_length<20.4487534] yes=19,no=20,missing=20
-				19:[receiverx<34.531353] yes=35,no=36,missing=36
-				20:[receiverdir<254.710007] yes=37,no=38,missing=38
-			10:[blocking_advantage<2] yes=21,no=22,missing=22
-				21:[defender_density_ratio<5.50647306] yes=39,no=40,missing=40
-				22:[defender_density_ratio<2.76227379] yes=41,no=42,missing=42
-	2:[defender_density_ratio<0.0102253081] yes=5,no=6,missing=6
-		5:[receivers<6.17999983] yes=11,no=12,missing=12
-			11:[pass_length<5.14707661] yes=23,no=24,missing=24
-				23:[defender_separation_encoded<3] yes=43,no=44,missing=44
-				24:[receivers<2.4000001] yes=45,no=46,missing=46
-			12:[separation_x_pass_length<44] yes=25,no=26,missing=26
-				25:[pass_length<8.48107338] yes=47,no=48,missing=48
-		6:[receivers<2.28999996] yes=13,no=14,missing=14
-			13:[defender_separation_encoded<3] yes=27,no=28,missing=28
-				27:[pass_length<4.98857355] yes=49,no=50,missing=50
-				28:[receiverx<27.2314777] yes=51,no=52,missing=52
-			14:[receiverdir<15.3881111] yes=29,no=30,missing=30
-				29:[defender_density_ratio<1.97141755] yes=53,no=54,missing=54
-				30:[defender_density_ratio<4.11132097] yes=55,no=56,missing=56
-
-FINAL PREDICTION: 0 yards (50.2% confidence)
-==================================================
-
-PLAY #4 - ACTUAL YARDS: 1
---------------------------------------------------
-
-PLAY DATA:
-           friends_bucket: 0.000
-defender_separation_encoded: 2.000
-       blocking_advantage: 0.000
- separation_x_pass_length: 8.000
-                receiverx: 79.160
-                receivery: 36.900
-                receivers: 5.640
-                receivera: 2.770
-              receiverdis: 0.580
-                receivero: 47.260
-              receiverdir: 2.370
-        defenders_in_path: 1.000
-              pass_length: 4.000
-              yards_to_go: 8.000
-             yardline_num: 27.000
-        yardline_squeezed: 3.332
-        receiver_momentum: 5.635
-   defender_density_ratio: 0.282
-   receiver_near_sideline: 1.000
-
-DECISION PATH:
-
-Tree 0:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[receivers<6.13999987] yes=3,no=4,missing=4
-		3:[friends_bucket<3] yes=7,no=8,missing=8
-			7:[defender_density_ratio<0.0102253081] yes=15,no=16,missing=16
-				15:[yards_to_go<2] yes=31,no=32,missing=32
-				16:[separation_x_pass_length<1] yes=33,no=34,missing=34
-			8:[receivers<3.94000006] yes=17,no=18,missing=18
-				17:[receiverdir<332.235901] yes=35,no=36,missing=36
-				18:[yardline_num<24] yes=37,no=38,missing=38
-		4:[defender_density_ratio<0.0102253081] yes=9,no=10,missing=10
-			9:[separation_x_pass_length<16.1093884] yes=19,no=20,missing=20
-				19:[receiverdir<197.770004] yes=39,no=40,missing=40
-				20:[receivery<2.38000011] yes=41,no=42,missing=42
-			10:[blocking_advantage<2] yes=21,no=22,missing=22
-				21:[blocking_advantage<-1.93715942] yes=43,no=44,missing=44
-				22:[receiverdir<199.220001] yes=45,no=46,missing=46
-	2:[receivery<50.1899986] yes=5,no=6,missing=6
-		5:[receivery<1.75] yes=11,no=12,missing=12
-			11:[receiverdir<223.325089] yes=23,no=24,missing=24
-				23:[receiverdir<138.580002] yes=47,no=48,missing=48
-				24:[blocking_advantage<0.0326698683] yes=49,no=50,missing=50
-			12:[defender_density_ratio<2.76227379] yes=25,no=26,missing=26
-				25:[defender_density_ratio<0.0102253081] yes=51,no=52,missing=52
-				26:[separation_x_pass_length<6.74260426] yes=53,no=54,missing=54
-		6:[defender_density_ratio<0.0102253081] yes=13,no=14,missing=14
-			13:[separation_x_pass_length<36.2029152] yes=27,no=28,missing=28
-				27:[receivers<1.84000003] yes=55,no=56,missing=56
-				28:[receiverdir<307.979279] yes=57,no=58,missing=58
-			14:[yardline_num<36] yes=29,no=30,missing=30
-				30:[pass_length<9.1632576] yes=59,no=60,missing=60
-
-Tree 1:
-0:[yardline_num<13] yes=1,no=2,missing=2
-	1:[pass_length<4.05907822] yes=3,no=4,missing=4
-		3:[yardline_num<8] yes=7,no=8,missing=8
-			7:[receivery<16.5200005] yes=15,no=16,missing=16
-				15:[receivery<14.0100002] yes=29,no=30,missing=30
-			8:[receivers<6.92657804] yes=17,no=18,missing=18
-				17:[yards_to_go<12] yes=31,no=32,missing=32
-		4:[receivero<304.689575] yes=9,no=10,missing=10
-			9:[receiverdis<0.358789623] yes=19,no=20,missing=20
-				19:[receivery<32.8100014] yes=33,no=34,missing=34
-				20:[receivero<116.300003] yes=35,no=36,missing=36
-			10:[receiverdir<19.848877] yes=21,no=22,missing=22
-				22:[receivers<2.78999996] yes=37,no=38,missing=38
-	2:[blocking_advantage<-1.93715942] yes=5,no=6,missing=6
-		5:[defender_density_ratio<7.59841156] yes=11,no=12,missing=12
-			11:[receivers<4.69999981] yes=23,no=24,missing=24
-				23:[blocking_advantage<-2] yes=39,no=40,missing=40
-				24:[yardline_num<36] yes=41,no=42,missing=42
-			12:[yardline_num<44] yes=25,no=26,missing=26
-				25:[pass_length<3.05799651] yes=43,no=44,missing=44
-		6:[blocking_advantage<-1.00044847] yes=13,no=14,missing=14
-			14:[blocking_advantage<-0.982067168] yes=27,no=28,missing=28
-				27:[receiverdis<0.109999999] yes=45,no=46,missing=46
-				28:[blocking_advantage<0] yes=47,no=48,missing=48
-
-Tree 2:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[defender_density_ratio<0.0102253081] yes=3,no=4,missing=4
-		3:[receivers<8.46000004] yes=7,no=8,missing=8
-			7:[separation_x_pass_length<29.3963966] yes=15,no=16,missing=16
-				15:[blocking_advantage<0.666962326] yes=31,no=32,missing=32
-				16:[receivero<60.436657] yes=33,no=34,missing=34
-			8:[receivery<47.2835693] yes=17,no=18,missing=18
-				17:[receiver_momentum<-3.98034453] yes=35,no=36,missing=36
-				18:[receiver_momentum<2.31518626] yes=37,no=38,missing=38
-		4:[defender_density_ratio<3.97133708] yes=9,no=10,missing=10
-			9:[defenders_in_path<4] yes=19,no=20,missing=20
-				19:[defenders_in_path<1] yes=39,no=40,missing=40
-				20:[receivers<2.45034456] yes=41,no=42,missing=42
-			10:[separation_x_pass_length<19.3058224] yes=21,no=22,missing=22
-				21:[receivero<350.624359] yes=43,no=44,missing=44
-				22:[receivery<12.6272402] yes=45,no=46,missing=46
-	2:[pass_length<4.98857355] yes=5,no=6,missing=6
-		5:[receivers<6.84773397] yes=11,no=12,missing=12
-			11:[defender_density_ratio<0.126602829] yes=23,no=24,missing=24
-				23:[receiver_momentum<6.001194] yes=47,no=48,missing=48
-				24:[receiverdir<11.0600004] yes=49,no=50,missing=50
-			12:[receiverdir<18.1399994] yes=25,no=26,missing=26
-				25:[receivero<345.240631] yes=51,no=52,missing=52
-				26:[receivery<10.7316418] yes=53,no=54,missing=54
-		6:[defender_density_ratio<0.126602829] yes=13,no=14,missing=14
-			13:[yards_to_go<9] yes=27,no=28,missing=28
-				27:[yardline_squeezed<3.89088345] yes=55,no=56,missing=56
-				28:[receivery<6.36999989] yes=57,no=58,missing=58
-			14:[receivers<2.4000001] yes=29,no=30,missing=30
-				29:[defender_density_ratio<0.326040298] yes=59,no=60,missing=60
-				30:[receivers<7.0999999] yes=61,no=62,missing=62
-
-Tree 3:
-0:[receivers<6.71404314] yes=1,no=2,missing=2
-	1:[separation_x_pass_length<36.2029152] yes=3,no=4,missing=4
-		3:[receiverdis<0.461812764] yes=7,no=8,missing=8
-			7:[friends_bucket<3] yes=15,no=16,missing=16
-				15:[receiverdir<136.779999] yes=31,no=32,missing=32
-				16:[receivero<16.0596695] yes=33,no=34,missing=34
-			8:[defender_density_ratio<0.0102253081] yes=17,no=18,missing=18
-				17:[defender_separation_encoded<4] yes=35,no=36,missing=36
-				18:[defender_density_ratio<2.19646168] yes=37,no=38,missing=38
-		4:[pass_length<17.965704] yes=9,no=10,missing=10
-			9:[yardline_num<26] yes=19,no=20,missing=20
-				19:[receivero<224.059998] yes=39,no=40,missing=40
-				20:[receiverdir<292.920013] yes=41,no=42,missing=42
-			10:[defender_density_ratio<0.521165192] yes=21,no=22,missing=22
-				21:[receiver_momentum<-2.82055116] yes=43,no=44,missing=44
-				22:[separation_x_pass_length<67.773201] yes=45,no=46,missing=46
-	2:[defender_density_ratio<0.0102253081] yes=5,no=6,missing=6
-		5:[blocking_advantage<0.0326698683] yes=11,no=12,missing=12
-			11:[defender_separation_encoded<3] yes=23,no=24,missing=24
-				23:[separation_x_pass_length<76] yes=47,no=48,missing=48
-				24:[receiverdis<0.710441351] yes=49,no=50,missing=50
-			12:[receivera<2.3499999] yes=25,no=26,missing=26
-				25:[separation_x_pass_length<25.5742054] yes=51,no=52,missing=52
-				26:[receivero<53.7200012] yes=53,no=54,missing=54
-		6:[defender_density_ratio<2.31731606] yes=13,no=14,missing=14
-			13:[blocking_advantage<0] yes=27,no=28,missing=28
-				27:[pass_length<2.0416739] yes=55,no=56,missing=56
-				28:[receiverdir<28.2323341] yes=57,no=58,missing=58
-			14:[receivera<1.00739217] yes=29,no=30,missing=30
-				29:[receivero<212.567108] yes=59,no=60,missing=60
-
-Tree 4:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[receiverdis<0.38021636] yes=3,no=4,missing=4
-		3:[defender_density_ratio<7.10793591] yes=7,no=8,missing=8
-			7:[blocking_advantage<0] yes=15,no=16,missing=16
-				15:[defenders_in_path<4] yes=31,no=32,missing=32
-				16:[receiverx<65.5299988] yes=33,no=34,missing=34
-			8:[receiverdir<339.836945] yes=17,no=18,missing=18
-		4:[defender_density_ratio<0.0102253081] yes=9,no=10,missing=10
-			9:[separation_x_pass_length<20.4487534] yes=19,no=20,missing=20
-				19:[receiverx<34.531353] yes=35,no=36,missing=36
-				20:[receiverdir<254.710007] yes=37,no=38,missing=38
-			10:[blocking_advantage<2] yes=21,no=22,missing=22
-				21:[defender_density_ratio<5.50647306] yes=39,no=40,missing=40
-				22:[defender_density_ratio<2.76227379] yes=41,no=42,missing=42
-	2:[defender_density_ratio<0.0102253081] yes=5,no=6,missing=6
-		5:[receivers<6.17999983] yes=11,no=12,missing=12
-			11:[pass_length<5.14707661] yes=23,no=24,missing=24
-				23:[defender_separation_encoded<3] yes=43,no=44,missing=44
-				24:[receivers<2.4000001] yes=45,no=46,missing=46
-			12:[separation_x_pass_length<44] yes=25,no=26,missing=26
-				25:[pass_length<8.48107338] yes=47,no=48,missing=48
-		6:[receivers<2.28999996] yes=13,no=14,missing=14
-			13:[defender_separation_encoded<3] yes=27,no=28,missing=28
-				27:[pass_length<4.98857355] yes=49,no=50,missing=50
-				28:[receiverx<27.2314777] yes=51,no=52,missing=52
-			14:[receiverdir<15.3881111] yes=29,no=30,missing=30
-				29:[defender_density_ratio<1.97141755] yes=53,no=54,missing=54
-				30:[defender_density_ratio<4.11132097] yes=55,no=56,missing=56
-
-FINAL PREDICTION: 0 yards (38.1% confidence)
-==================================================
-
-PLAY #5 - ACTUAL YARDS: 2
---------------------------------------------------
-
-PLAY DATA:
-           friends_bucket: 0.000
-defender_separation_encoded: 2.000
-       blocking_advantage: -2.000
- separation_x_pass_length: 10.000
-                receiverx: 70.150
-                receivery: 32.460
-                receivers: 5.240
-                receivera: 1.190
-              receiverdis: 0.530
-                receivero: 24.530
-              receiverdir: 16.200
-        defenders_in_path: 4.000
-              pass_length: 5.000
-              yards_to_go: 10.000
-             yardline_num: 45.000
-        yardline_squeezed: 3.829
-        receiver_momentum: 5.032
-   defender_density_ratio: 1.462
-   receiver_near_sideline: 1.000
-
-DECISION PATH:
-
-Tree 0:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[receivers<6.13999987] yes=3,no=4,missing=4
-		3:[friends_bucket<3] yes=7,no=8,missing=8
-			7:[defender_density_ratio<0.0102253081] yes=15,no=16,missing=16
-				15:[yards_to_go<2] yes=31,no=32,missing=32
-				16:[separation_x_pass_length<1] yes=33,no=34,missing=34
-			8:[receivers<3.94000006] yes=17,no=18,missing=18
-				17:[receiverdir<332.235901] yes=35,no=36,missing=36
-				18:[yardline_num<24] yes=37,no=38,missing=38
-		4:[defender_density_ratio<0.0102253081] yes=9,no=10,missing=10
-			9:[separation_x_pass_length<16.1093884] yes=19,no=20,missing=20
-				19:[receiverdir<197.770004] yes=39,no=40,missing=40
-				20:[receivery<2.38000011] yes=41,no=42,missing=42
-			10:[blocking_advantage<2] yes=21,no=22,missing=22
-				21:[blocking_advantage<-1.93715942] yes=43,no=44,missing=44
-				22:[receiverdir<199.220001] yes=45,no=46,missing=46
-	2:[receivery<50.1899986] yes=5,no=6,missing=6
-		5:[receivery<1.75] yes=11,no=12,missing=12
-			11:[receiverdir<223.325089] yes=23,no=24,missing=24
-				23:[receiverdir<138.580002] yes=47,no=48,missing=48
-				24:[blocking_advantage<0.0326698683] yes=49,no=50,missing=50
-			12:[defender_density_ratio<2.76227379] yes=25,no=26,missing=26
-				25:[defender_density_ratio<0.0102253081] yes=51,no=52,missing=52
-				26:[separation_x_pass_length<6.74260426] yes=53,no=54,missing=54
-		6:[defender_density_ratio<0.0102253081] yes=13,no=14,missing=14
-			13:[separation_x_pass_length<36.2029152] yes=27,no=28,missing=28
-				27:[receivers<1.84000003] yes=55,no=56,missing=56
-				28:[receiverdir<307.979279] yes=57,no=58,missing=58
-			14:[yardline_num<36] yes=29,no=30,missing=30
-				30:[pass_length<9.1632576] yes=59,no=60,missing=60
-
-Tree 1:
-0:[yardline_num<13] yes=1,no=2,missing=2
-	1:[pass_length<4.05907822] yes=3,no=4,missing=4
-		3:[yardline_num<8] yes=7,no=8,missing=8
-			7:[receivery<16.5200005] yes=15,no=16,missing=16
-				15:[receivery<14.0100002] yes=29,no=30,missing=30
-			8:[receivers<6.92657804] yes=17,no=18,missing=18
-				17:[yards_to_go<12] yes=31,no=32,missing=32
-		4:[receivero<304.689575] yes=9,no=10,missing=10
-			9:[receiverdis<0.358789623] yes=19,no=20,missing=20
-				19:[receivery<32.8100014] yes=33,no=34,missing=34
-				20:[receivero<116.300003] yes=35,no=36,missing=36
-			10:[receiverdir<19.848877] yes=21,no=22,missing=22
-				22:[receivers<2.78999996] yes=37,no=38,missing=38
-	2:[blocking_advantage<-1.93715942] yes=5,no=6,missing=6
-		5:[defender_density_ratio<7.59841156] yes=11,no=12,missing=12
-			11:[receivers<4.69999981] yes=23,no=24,missing=24
-				23:[blocking_advantage<-2] yes=39,no=40,missing=40
-				24:[yardline_num<36] yes=41,no=42,missing=42
-			12:[yardline_num<44] yes=25,no=26,missing=26
-				25:[pass_length<3.05799651] yes=43,no=44,missing=44
-		6:[blocking_advantage<-1.00044847] yes=13,no=14,missing=14
-			14:[blocking_advantage<-0.982067168] yes=27,no=28,missing=28
-				27:[receiverdis<0.109999999] yes=45,no=46,missing=46
-				28:[blocking_advantage<0] yes=47,no=48,missing=48
-
-Tree 2:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[defender_density_ratio<0.0102253081] yes=3,no=4,missing=4
-		3:[receivers<8.46000004] yes=7,no=8,missing=8
-			7:[separation_x_pass_length<29.3963966] yes=15,no=16,missing=16
-				15:[blocking_advantage<0.666962326] yes=31,no=32,missing=32
-				16:[receivero<60.436657] yes=33,no=34,missing=34
-			8:[receivery<47.2835693] yes=17,no=18,missing=18
-				17:[receiver_momentum<-3.98034453] yes=35,no=36,missing=36
-				18:[receiver_momentum<2.31518626] yes=37,no=38,missing=38
-		4:[defender_density_ratio<3.97133708] yes=9,no=10,missing=10
-			9:[defenders_in_path<4] yes=19,no=20,missing=20
-				19:[defenders_in_path<1] yes=39,no=40,missing=40
-				20:[receivers<2.45034456] yes=41,no=42,missing=42
-			10:[separation_x_pass_length<19.3058224] yes=21,no=22,missing=22
-				21:[receivero<350.624359] yes=43,no=44,missing=44
-				22:[receivery<12.6272402] yes=45,no=46,missing=46
-	2:[pass_length<4.98857355] yes=5,no=6,missing=6
-		5:[receivers<6.84773397] yes=11,no=12,missing=12
-			11:[defender_density_ratio<0.126602829] yes=23,no=24,missing=24
-				23:[receiver_momentum<6.001194] yes=47,no=48,missing=48
-				24:[receiverdir<11.0600004] yes=49,no=50,missing=50
-			12:[receiverdir<18.1399994] yes=25,no=26,missing=26
-				25:[receivero<345.240631] yes=51,no=52,missing=52
-				26:[receivery<10.7316418] yes=53,no=54,missing=54
-		6:[defender_density_ratio<0.126602829] yes=13,no=14,missing=14
-			13:[yards_to_go<9] yes=27,no=28,missing=28
-				27:[yardline_squeezed<3.89088345] yes=55,no=56,missing=56
-				28:[receivery<6.36999989] yes=57,no=58,missing=58
-			14:[receivers<2.4000001] yes=29,no=30,missing=30
-				29:[defender_density_ratio<0.326040298] yes=59,no=60,missing=60
-				30:[receivers<7.0999999] yes=61,no=62,missing=62
-
-Tree 3:
-0:[receivers<6.71404314] yes=1,no=2,missing=2
-	1:[separation_x_pass_length<36.2029152] yes=3,no=4,missing=4
-		3:[receiverdis<0.461812764] yes=7,no=8,missing=8
-			7:[friends_bucket<3] yes=15,no=16,missing=16
-				15:[receiverdir<136.779999] yes=31,no=32,missing=32
-				16:[receivero<16.0596695] yes=33,no=34,missing=34
-			8:[defender_density_ratio<0.0102253081] yes=17,no=18,missing=18
-				17:[defender_separation_encoded<4] yes=35,no=36,missing=36
-				18:[defender_density_ratio<2.19646168] yes=37,no=38,missing=38
-		4:[pass_length<17.965704] yes=9,no=10,missing=10
-			9:[yardline_num<26] yes=19,no=20,missing=20
-				19:[receivero<224.059998] yes=39,no=40,missing=40
-				20:[receiverdir<292.920013] yes=41,no=42,missing=42
-			10:[defender_density_ratio<0.521165192] yes=21,no=22,missing=22
-				21:[receiver_momentum<-2.82055116] yes=43,no=44,missing=44
-				22:[separation_x_pass_length<67.773201] yes=45,no=46,missing=46
-	2:[defender_density_ratio<0.0102253081] yes=5,no=6,missing=6
-		5:[blocking_advantage<0.0326698683] yes=11,no=12,missing=12
-			11:[defender_separation_encoded<3] yes=23,no=24,missing=24
-				23:[separation_x_pass_length<76] yes=47,no=48,missing=48
-				24:[receiverdis<0.710441351] yes=49,no=50,missing=50
-			12:[receivera<2.3499999] yes=25,no=26,missing=26
-				25:[separation_x_pass_length<25.5742054] yes=51,no=52,missing=52
-				26:[receivero<53.7200012] yes=53,no=54,missing=54
-		6:[defender_density_ratio<2.31731606] yes=13,no=14,missing=14
-			13:[blocking_advantage<0] yes=27,no=28,missing=28
-				27:[pass_length<2.0416739] yes=55,no=56,missing=56
-				28:[receiverdir<28.2323341] yes=57,no=58,missing=58
-			14:[receivera<1.00739217] yes=29,no=30,missing=30
-				29:[receivero<212.567108] yes=59,no=60,missing=60
-
-Tree 4:
-0:[defender_separation_encoded<2] yes=1,no=2,missing=2
-	1:[receiverdis<0.38021636] yes=3,no=4,missing=4
-		3:[defender_density_ratio<7.10793591] yes=7,no=8,missing=8
-			7:[blocking_advantage<0] yes=15,no=16,missing=16
-				15:[defenders_in_path<4] yes=31,no=32,missing=32
-				16:[receiverx<65.5299988] yes=33,no=34,missing=34
-			8:[receiverdir<339.836945] yes=17,no=18,missing=18
-		4:[defender_density_ratio<0.0102253081] yes=9,no=10,missing=10
-			9:[separation_x_pass_length<20.4487534] yes=19,no=20,missing=20
-				19:[receiverx<34.531353] yes=35,no=36,missing=36
-				20:[receiverdir<254.710007] yes=37,no=38,missing=38
-			10:[blocking_advantage<2] yes=21,no=22,missing=22
-				21:[defender_density_ratio<5.50647306] yes=39,no=40,missing=40
-				22:[defender_density_ratio<2.76227379] yes=41,no=42,missing=42
-	2:[defender_density_ratio<0.0102253081] yes=5,no=6,missing=6
-		5:[receivers<6.17999983] yes=11,no=12,missing=12
-			11:[pass_length<5.14707661] yes=23,no=24,missing=24
-				23:[defender_separation_encoded<3] yes=43,no=44,missing=44
-				24:[receivers<2.4000001] yes=45,no=46,missing=46
-			12:[separation_x_pass_length<44] yes=25,no=26,missing=26
-				25:[pass_length<8.48107338] yes=47,no=48,missing=48
-		6:[receivers<2.28999996] yes=13,no=14,missing=14
-			13:[defender_separation_encoded<3] yes=27,no=28,missing=28
-				27:[pass_length<4.98857355] yes=49,no=50,missing=50
-				28:[receiverx<27.2314777] yes=51,no=52,missing=52
-			14:[receiverdir<15.3881111] yes=29,no=30,missing=30
-				29:[defender_density_ratio<1.97141755] yes=53,no=54,missing=54
-				30:[defender_density_ratio<4.11132097] yes=55,no=56,missing=56
-
-FINAL PREDICTION: 6-10 yards (47.3% confidence)
+FINAL PREDICTION: 6-10 yards (52.0% confidence)
 ==================================================
