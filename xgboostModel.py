@@ -13,9 +13,9 @@ import shap
 def get_category_probabilities(sample_probs, val):
     return {
         "actual yards": val,
-        "0 yards": sample_probs[0:0.99].sum(),
-        "1-5 yards": sample_probs[1:5.99].sum(),
-        "6-10 yards": sample_probs[6:10.99].sum(),
+        "0 yards": sample_probs[0:2].sum(),
+        "1-5 yards": sample_probs[3:5].sum(),
+        "6-10 yards": sample_probs[6:10].sum(),
         "11+ yards": sample_probs[11:].sum()
     }
 
@@ -55,8 +55,7 @@ input_df["defender_density_ratio"] = input_df["defenders_in_path"] / (input_df["
 # 3. Directional momentum (receiver speed × direction)
 input_df["receiver_momentum"] = input_df["receivers"] * np.cos(np.radians(input_df["receiverdir"]))
 
-# 4. Field position impact (compressed yardline)
-input_df["yardline_squeezed"] = np.log1p(input_df["yardline_num"])
+
 
 input_df["defender_pressure"] = (
     input_df["defenders_in_path"] * 
@@ -87,8 +86,7 @@ x = input_df[[
     "defenders_in_path",
     "pass_length",
     "yards_to_go",
-    "yardline_num" ,
-    "yardline_squeezed" ,
+    
     "receiver_momentum" ,
     "defender_density_ratio" ,
     "receiver_near_sideline",
@@ -114,7 +112,7 @@ feature_weights = {
 }
 
 y = input_df["yards_gained"].clip(lower=0).apply(
-    lambda y: 0 if y == 0 else 1 if 1 <= y <= 5 else 2 if 6 <= y <= 10 else 3
+    lambda y: 0 if y <= 2 else 1 if 2.1 <= y <= 5 else 2 if 6 <= y <= 8 else 3
 )
 
 # Model training
@@ -123,11 +121,11 @@ params = {
     "objective": "multi:softprob",
     "eval_metric": "mlogloss",
     "num_class": 4,
-    "eta": 0.05,
+    "eta": 0.03,
     "gamma": 0.3,
     "subsample": 0.8,
     "colsample_bytree": 0.7,
-    "max_depth": 5,
+    "max_depth": 8,
     "min_child_weight": 1,
 }
 
@@ -141,7 +139,7 @@ for fold, (train_idx, test_idx) in enumerate(kfold.split(x)):
     x_train, x_test = x.iloc[train_idx], x.iloc[test_idx]
     y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
     
-    smote = SMOTE(sampling_strategy={2: 1300, 3: 1100}, k_neighbors=4, random_state=7)
+    smote = SMOTE(sampling_strategy={1: 1500, 2: 1300, 3: 1100}, k_neighbors=4, random_state=7)
     x_train, y_train = smote.fit_resample(x_train, y_train)
     
     class_weights = compute_class_weight("balanced", classes=np.unique(y_train), y=y_train)
@@ -173,7 +171,7 @@ predicted_classes = np.argmax(preds_concat, axis=1)
 
 
 # Evaluation
-class_names = ["0 yards", "1-5 yards", "6-10 yards", "11+ yards"]
+class_names = ["0-2yards", "3-5 yards", "6-10 yards", "11+ yards"]
 cm = confusion_matrix(true_labels, predicted_classes)
 print("Confusion Matrix:\n", cm)
 print("\nClassification Report:\n", classification_report(true_labels, predicted_classes, target_names=class_names))
