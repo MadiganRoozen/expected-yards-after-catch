@@ -157,7 +157,7 @@ input_df["DTC"] = DTC
 x = input_df[[
     "friends_bucket",
     #"offense_form_bucket",
-    "nearest_def_cover_bucket",
+    #"nearest_def_cover_bucket",
     "defender_separation_encoded",
     "blocking_advantage",
     "separation_x_pass_length",
@@ -173,10 +173,10 @@ x = input_df[[
     #"yards_to_go",
     #"yardline_num" ,
     #"yardline_squeezed" ,
-    "receiver_momentum" ,
-    "defender_density_ratio" ,
+    "receiver_momentum",
+    "defender_density_ratio",
     #"receiver_near_sideline",
-    "DTC",
+    #"DTC",
 ]].copy()
  
 # Define feature weights (higher = more important)
@@ -319,12 +319,13 @@ with open('test.txt', 'w') as f:
         plt.savefig('shap_feature_importance.png')  # Save for later reference
         plt.show()
 
+'''
         # 3. Visualize decision logic for specific plays
         for i in range(min(3, len(sample_plays))):  # First 3 sample plays
             plt.figure(figsize=(12, 5))
-            shap.decision_plot(
+            shap.multioutput_decision_plot(
                 explainer.expected_value,
-                shap_values[i],
+                shap_values[0][i],
                 x_test.iloc[i],
                 feature_names=list(x_test.columns),
                 show=False
@@ -333,7 +334,7 @@ with open('test.txt', 'w') as f:
             plt.tight_layout()
             plt.savefig(f'shap_play_{i+1}.png')
             plt.close()  # Close plot to prevent display if running in notebook
-            
+'''
 
 #SAVING RELOADING AND RANKING WITH MODEL
 model.save_model("xgbModel.json")
@@ -346,10 +347,16 @@ input_df = pd.read_csv(r"ranking_test_subset.csv",
                               "receivero", "receiverdir", "distance_to_nearest_def", "defenders_in_path",
                               "friends_in_path", "pass_length", "yards_to_go", "yardline_num"])
 
+#Add in playerIds, this will be given by the YOLO later
+playerIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+input_df["playerID"] = playerIds
+
+#Do not try to pass to players behind the QB
 input_df = input_df[input_df["pass_length"] > 0]
 
-pass_lengths = input_df["pass_length"]
 
+#Preparing features for use in the model
+pass_lengths = input_df["pass_length"]
 input_df["defender_separation_encoded"] = input_df["distance_to_nearest_def"].apply(bucket_separation)
 input_df["friends_bucket"] = input_df["friends_in_path"].apply(bucket_friends)
 input_df["blocking_advantage"] = input_df["friends_bucket"] - np.floor(input_df["defenders_in_path"] / 2)
@@ -367,7 +374,7 @@ input_df["receiver_momentum"] = input_df["receivers"] * np.cos(np.radians(input_
 # 4. Field position impact (compressed yardline)
 input_df["yardline_squeezed"] = np.log1p(input_df["yardline_num"])
 
-# Prepare features and target
+#Make sure these match the features used in training
 ranking_test = input_df[[
     "friends_bucket",
     "defender_separation_encoded",
@@ -382,17 +389,17 @@ ranking_test = input_df[[
     "receiverdir",
     "defenders_in_path",
     "pass_length",
-    "yards_to_go",
-    "yardline_num" ,
-    "yardline_squeezed" ,
+    #"yards_to_go",
+    #"yardline_num" ,
+    #"yardline_squeezed" ,
     "receiver_momentum" ,
     "defender_density_ratio" ,
-    "receiver_near_sideline",
+    #"receiver_near_sideline",
 ]].copy()
  
 ranking_test = xgb.DMatrix(ranking_test)
 
-# You can now use it for prediction
+#Model can now be used for predictions
 ranking_pred = loaded_model.predict(ranking_test)
 
 print(ranking_pred)
@@ -407,14 +414,16 @@ results = pd.DataFrame({
 print(results)
 
 #Deciding rankings
-sample_max_throw_dist = 12
+
+#If a maximum throw distance is given, exclude passes that are too far for the user
+#sample_max_throw_dist = 12
 
 #results now only includes passes that are within the players range
-results = results[results["pass_length"] <= sample_max_throw_dist]
+#results = results[results["pass_length"] <= sample_max_throw_dist]
 
 rankings = results.sort_values(by=['predicted_class', 'pass_length'], ascending=[False, True])
 
-# Add a rank column starting at 1
+#Add a rank column starting at 1
 rankings["rank"] = range(1, len(rankings) + 1)
 
 print(rankings)
