@@ -20,7 +20,7 @@ def get_category_probabilities(sample_probs, val):
     }
 
 # Data preparation
-input_df = pd.read_csv(r"SD/model_input_df_pass_catch_with_friends.csv", 
+input_df = pd.read_csv(r"model_input_df_pass_catch_with_friends.csv", 
                       usecols=["receiverx", "receivery", "receivers", "receivera", "receiverdis", 
                               "receivero", "receiverdir", "distance_to_nearest_def", "defenders_in_path",
                               "friends_in_path", "pass_length", "yards_to_go", "yardline_num", "yards_gained"])
@@ -81,12 +81,11 @@ x = input_df[[
     "receivers",
     "receivera",
     "receiverdis",
-    "receivero",
+    #"receivero",
     "receiverdir",
     "defenders_in_path",
     "pass_length",
-    "yards_to_go",
-    
+    #"yards_to_go",
     "receiver_momentum" ,
     "defender_density_ratio" ,
     "receiver_near_sideline",
@@ -181,6 +180,7 @@ sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=class_names, ytic
 plt.title("Confusion Matrix")
 plt.show()
 
+'''
 
 # Select 5 random test plays
 sample_plays = x_test.sample(5, random_state=42)
@@ -250,3 +250,102 @@ with open('test.txt', 'w') as f:
             plt.tight_layout()
             plt.savefig(f'shap_play_{i+1}.png')
             plt.close()  # Close plot to prevent display if running in notebook
+'''
+
+#SAVING RELOADING AND RANKING WITH MODEL
+model.save_model("xgbModel.json")
+
+loaded_model = xgb.Booster()
+loaded_model.load_model("xgbModel.json")
+
+input_df = pd.read_csv(r"model_input_from_yolo.csv", 
+                      usecols=["receiverID", "receiverx", "receivery", "receivers", "receivera", "receiverdis", "receiverdir", "distance_to_nearest_def", "defenderx",
+     "defendery", "defenders", "defendera", "defenderdis", "defenderdir", "defenders_in_path","friends_in_path", "pass_length"])
+
+#Do not try to pass to players behind the QB
+input_df = input_df[input_df["pass_length"] > 0]
+
+#Preparing features for use in the model
+pass_lengths = input_df["pass_length"]
+input_df["defender_separation_encoded"] = input_df["distance_to_nearest_def"].apply(bucket_separation)
+input_df["friends_bucket"] = input_df["friends_in_path"].apply(bucket_friends)
+input_df["blocking_advantage"] = input_df["friends_bucket"] - np.floor(input_df["defenders_in_path"] / 2)
+input_df["separation_x_pass_length"] = input_df["defender_separation_encoded"] * input_df["pass_length"]
+
+# 1. Receiver's positioning advantage (sideline vs. middle)
+input_df["receiver_near_sideline"] = (np.abs(input_df["receiverx"]) > 30).astype(int)
+
+# 2. Defender density ratio
+input_df["defender_density_ratio"] = input_df["defenders_in_path"] / (input_df["distance_to_nearest_def"] + 0.1)
+
+# 3. Directional momentum (receiver speed × direction)
+input_df["receiver_momentum"] = input_df["receivers"] * np.cos(np.radians(input_df["receiverdir"]))
+
+input_df["defender_pressure"] = (
+    input_df["defenders_in_path"] * 
+    np.where(input_df["receivera"] < 0, 1.5, 1.0) *  # Amplify if decelerating
+    (1 / (input_df["distance_to_nearest_def"] + 0.5)  # Inverse distance weighting
+))
+
+# Create tackle probability feature
+input_df["tackle_indicators"] = (
+    (input_df["defenders_in_path"] >= 2) & 
+    (input_df["receivera"] < 0)
+).astype(int)
+
+
+# Prepare features and target
+ranking_test = input_df[[
+    "friends_bucket",
+    "defender_separation_encoded",
+    "blocking_advantage",
+    "separation_x_pass_length",
+    "receiverx",
+    "receivery",
+    "receivers",
+    "receivera",
+    "receiverdis",
+    #"receivero",
+    "receiverdir",
+    "defenders_in_path",
+    "pass_length",
+    #"yards_to_go",
+    "receiver_momentum" ,
+    "defender_density_ratio" ,
+    "receiver_near_sideline",
+    "defender_pressure",
+    "tackle_indicators",
+    "distance_to_nearest_def"
+]].copy()
+ 
+ranking_test = xgb.DMatrix(ranking_test)
+
+#Model can now be used for predictions
+ranking_pred = loaded_model.predict(ranking_test)
+
+print(ranking_pred)
+predicted_classes = np.argmax(ranking_pred, axis=1)
+print(predicted_classes)
+
+results = pd.DataFrame({
+    'receiverID': input_df["receiverID"],
+    'predicted_class': predicted_classes,
+    'pass_length': pass_lengths
+})
+
+print(results)
+
+#Deciding rankings
+
+#If a maximum throw distance is given, exclude passes that are too far for the user
+#sample_max_throw_dist = 12
+
+#results now only includes passes that are within the players range
+#results = results[results["pass_length"] <= sample_max_throw_dist]
+
+rankings = results.sort_values(by=['predicted_class', 'pass_length'], ascending=[False, True])
+
+#Add a rank column starting at 1
+rankings["rank"] = range(1, len(rankings) + 1)
+
+print(rankings)
